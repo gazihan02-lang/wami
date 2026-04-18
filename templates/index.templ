@@ -298,7 +298,7 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 						<button type="button" onclick="closeScheduleModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">
 							İptal
 						</button>
-						<button id="btn-schedule-submit" type="submit" onclick="this.disabled=true;this.form.submit();" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1">
+						<button id="btn-schedule-submit" type="submit" onclick="syncMessage();this.disabled=true;this.form.submit();" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1">
 							<span class="material-icons-round text-[16px]">schedule_send</span>
 							Planla
 						</button>
@@ -340,6 +340,17 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 
 		/* --- Tab switching --- */
 		let currentTab = 'text';
+		function syncMessage() {
+			var h = document.getElementById('modal-message-hidden');
+			if (currentTab === 'text') {
+				h.value = document.getElementById('modal-message')?.value || '';
+			} else if (currentTab === 'image') {
+				h.value = document.getElementById('modal-caption')?.value || '';
+			} else {
+				h.value = '';
+			}
+			syncFileId();
+		}
 		function switchTab(tab) {
 			currentTab = tab;
 			document.getElementById('modal-msg-type').value = tab;
