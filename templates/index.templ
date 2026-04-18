@@ -136,7 +136,7 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 							</thead>
 							<tbody>
 								for _, msg := range scheduled {
-									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
+									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors relative hover:z-[100]">
 										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
 										<td class="px-6 py-3.5 text-gray-600 text-xs">
 											<span class="inline-flex items-center gap-1">
@@ -492,7 +492,7 @@ templ msgTypeBadge(t string) {
 templ msgTypeTooltip(msg store.ScheduledMessage) {
 	<div class="relative group/tip inline-flex">
 		@msgTypeBadge(msg.MsgType)
-		<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-50">
+		<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-[9999]">
 			<div class="bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]">
 				switch msg.MsgType {
 					case "image", "image_only":

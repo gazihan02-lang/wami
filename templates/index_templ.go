@@ -97,7 +97,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					return templ_7745c5c3_Err
 				}
 				for _, msg := range scheduled {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<tr class=\"border-t border-gray-100 hover:bg-green-50/40 transition-colors\"><td class=\"px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<tr class=\"border-t border-gray-100 hover:bg-green-50/40 transition-colors relative hover:z-[100]\"><td class=\"px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -464,7 +464,7 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-50\"><div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-[9999]\"><div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
