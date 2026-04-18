@@ -18,6 +18,20 @@ import (
 	"wami/templates"
 )
 
+var istanbulLoc *time.Location
+
+func mustLoadLocation(name string) *time.Location {
+	if istanbulLoc != nil {
+		return istanbulLoc
+	}
+	loc, err := time.LoadLocation(name)
+	if err != nil {
+		log.Fatalf("timezone yüklenemedi: %v", err)
+	}
+	istanbulLoc = loc
+	return loc
+}
+
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
@@ -94,7 +108,7 @@ func (s *Server) handleScheduleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	scheduledAt, err := time.ParseInLocation("2006-01-02T15:04", scheduledAtStr, time.Local)
+	scheduledAt, err := time.ParseInLocation("2006-01-02T15:04", scheduledAtStr, mustLoadLocation("Europe/Istanbul"))
 	if err != nil {
 		http.Error(w, "Geçersiz tarih formatı", http.StatusBadRequest)
 		return
