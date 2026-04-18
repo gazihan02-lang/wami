@@ -497,7 +497,7 @@ templ msgTypeTooltip(msg store.ScheduledMessage) {
 				switch msg.MsgType {
 					case "image", "image_only":
 						if msg.FilePath != "" {
-							<img src={ "/uploads/" + msg.FilePath } alt="Önizleme" class="w-full max-h-40 object-contain rounded-lg"/>
+							<img src={ "/" + msg.FilePath } alt="Önizleme" class="w-full max-h-40 object-contain rounded-lg"/>
 						} else {
 							<p class="text-xs text-gray-300 text-center">Dosya bulunamadı</p>
 						}
