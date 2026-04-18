@@ -60,8 +60,8 @@ templ ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgT
 								<div id="wa-group-list" class="space-y-1 max-h-64 overflow-y-auto pr-1">
 									for _, g := range waGroups {
 										<label data-group-name={ g.Name } class="wa-group-item flex items-center gap-3 px-3 py-2.5 rounded-2xl border border-gray-100 hover:border-green-400 hover:bg-green-50/60 cursor-pointer transition-all duration-150 group">
-											<span class="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-green-500 flex items-center justify-center shrink-0 transition-colors has-[:checked]:bg-green-600 has-[:checked]:border-green-600">
-												<input type="checkbox" name="jids" value={ g.JID } class="sr-only peer"/>
+											<span class="relative w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-green-500 flex items-center justify-center shrink-0 transition-colors has-[:checked]:bg-green-600 has-[:checked]:border-green-600">
+												<input type="checkbox" name="jids" value={ g.JID } class="absolute inset-0 opacity-0 cursor-pointer peer"/>
 												<span class="material-icons-round text-white text-[13px] opacity-0 peer-checked:opacity-100">check</span>
 											</span>
 											<span class="material-icons-round text-gray-300 group-hover:text-green-400 text-[17px] shrink-0 transition-colors">group</span>

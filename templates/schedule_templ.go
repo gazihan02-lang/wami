@@ -90,7 +90,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"wa-group-item flex items-center gap-3 px-3 py-2.5 rounded-2xl border border-gray-100 hover:border-green-400 hover:bg-green-50/60 cursor-pointer transition-all duration-150 group\"><span class=\"w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-green-500 flex items-center justify-center shrink-0 transition-colors has-[:checked]:bg-green-600 has-[:checked]:border-green-600\"><input type=\"checkbox\" name=\"jids\" value=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\" class=\"wa-group-item flex items-center gap-3 px-3 py-2.5 rounded-2xl border border-gray-100 hover:border-green-400 hover:bg-green-50/60 cursor-pointer transition-all duration-150 group\"><span class=\"relative w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-green-500 flex items-center justify-center shrink-0 transition-colors has-[:checked]:bg-green-600 has-[:checked]:border-green-600\"><input type=\"checkbox\" name=\"jids\" value=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -103,7 +103,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"sr-only peer\"> <span class=\"material-icons-round text-white text-[13px] opacity-0 peer-checked:opacity-100\">check</span></span> <span class=\"material-icons-round text-gray-300 group-hover:text-green-400 text-[17px] shrink-0 transition-colors\">group</span> <span class=\"text-sm text-gray-700 truncate\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" class=\"absolute inset-0 opacity-0 cursor-pointer peer\"> <span class=\"material-icons-round text-white text-[13px] opacity-0 peer-checked:opacity-100\">check</span></span> <span class=\"material-icons-round text-gray-300 group-hover:text-green-400 text-[17px] shrink-0 transition-colors\">group</span> <span class=\"text-sm text-gray-700 truncate\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
