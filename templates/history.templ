@@ -139,6 +139,19 @@ templ Archive(folderID int64, breadcrumb []store.MediaFolder, folders []store.Me
 											<span class="material-icons-round text-[40px] text-amber-500">folder</span>
 											<span class="text-xs font-medium text-gray-700 text-center truncate w-full">{ f.Name }</span>
 										</a>
+										<!-- Rename button -->
+										<form method="POST" action="/archive/folder/rename" class="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+											<input type="hidden" name="id" value={ fmt.Sprintf("%d", f.ID) }/>
+											<input type="hidden" name="name" class="rename-val"/>
+											<button
+												type="submit"
+												data-oldname={ f.Name }
+												onclick="var n=prompt('Yeni klasör adı:',this.dataset.oldname); if(!n||!n.trim()){event.preventDefault();return;} this.form.querySelector('.rename-val').value=n.trim();"
+												class="p-1 bg-white/90 rounded-lg text-gray-300 hover:text-blue-500 hover:bg-blue-50 transition-all md-elevation-1"
+											>
+												<span class="material-icons-round text-[15px]">edit</span>
+											</button>
+										</form>
 										<!-- Delete button -->
 										<form method="POST" action="/archive/folder/delete" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
 											<input type="hidden" name="id" value={ fmt.Sprintf("%d", f.ID) }/>

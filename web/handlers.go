@@ -191,6 +191,34 @@ func (s *Server) handleFolderCreate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, redirect, http.StatusSeeOther)
 }
 
+func (s *Server) handleFolderRename(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	if err != nil {
+		http.Error(w, "Geçersiz ID", http.StatusBadRequest)
+		return
+	}
+	name := strings.TrimSpace(r.FormValue("name"))
+	if name == "" {
+		http.Error(w, "İsim zorunlu", http.StatusBadRequest)
+		return
+	}
+	if err := s.db.RenameMediaFolder(id, name); err != nil {
+		log.Printf("handleFolderRename: %v", err)
+		http.Error(w, "Güncellenemedi", http.StatusInternalServerError)
+		return
+	}
+	folder, _ := s.db.GetMediaFolder(id)
+	redirect := "/history"
+	if folder != nil && folder.ParentID > 0 {
+		redirect = fmt.Sprintf("/history?folder=%d", folder.ParentID)
+	}
+	http.Redirect(w, r, redirect, http.StatusSeeOther)
+}
+
 func (s *Server) handleFolderDelete(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)

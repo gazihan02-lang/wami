@@ -389,6 +389,11 @@ func (d *DB) GetFolderBreadcrumb(id int64) ([]MediaFolder, error) {
 	return crumbs, nil
 }
 
+func (d *DB) RenameMediaFolder(id int64, name string) error {
+	_, err := d.db.Exec(`UPDATE media_folders SET name = ? WHERE id = ?`, name, id)
+	return err
+}
+
 func (d *DB) DeleteMediaFolder(id int64) error {
 	// Delete child files
 	rows, err := d.db.Query(`SELECT id FROM media_files WHERE folder_id = ?`, id)

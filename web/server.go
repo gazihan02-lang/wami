@@ -46,6 +46,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("GET /api/media-tree", s.handleMediaTree)
 	s.mux.HandleFunc("GET /history", s.handleArchive)
 	s.mux.HandleFunc("POST /archive/folder/create", s.handleFolderCreate)
+	s.mux.HandleFunc("POST /archive/folder/rename", s.handleFolderRename)
 	s.mux.HandleFunc("POST /archive/folder/delete", s.handleFolderDelete)
 	s.mux.HandleFunc("POST /archive/upload", s.handleFileUpload)
 	s.mux.HandleFunc("POST /archive/file/delete", s.handleFileDelete)
