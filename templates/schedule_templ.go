@@ -62,7 +62,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"space-y-5\"><!-- Page header --><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1\"><span class=\"material-icons-round text-white text-[20px]\">schedule_send</span></div><div><h2 class=\"text-xl font-bold text-gray-800 leading-tight\">Mesaj Planla</h2><p class=\"text-xs text-gray-400\">Grup oluştur ve zamanlı mesaj gönder</p></div></div><!-- ÜST: Grup yönetimi — MD3 2-col grid --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-5\"><!-- SOL: Yeni grup oluştur --><div class=\"bg-white rounded-3xl md-elevation-1 overflow-hidden\"><div class=\"px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2\"><span class=\"material-icons-round text-green-700 text-[18px]\">add_circle</span> <span class=\"text-xs font-semibold text-gray-600 uppercase tracking-wider\">Yeni Grup Oluştur</span></div><form method=\"POST\" action=\"/groups/create\" class=\"p-6 space-y-4\"><!-- WA grup listesi --><div><p class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2\">WhatsApp Grupları</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"space-y-5\"><!-- Page header --><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1\"><span class=\"material-icons-round text-white text-[20px]\">schedule_send</span></div><div><h2 class=\"text-xl font-bold text-gray-800 leading-tight\">Mesaj Planla</h2><p class=\"text-xs text-gray-400\">Grup oluştur ve zamanlı mesaj gönder</p></div></div><!-- ÜST: Grup yönetimi — MD3 2-col grid --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-5\"><!-- SOL: Yeni grup oluştur --><div class=\"bg-white rounded-3xl md-elevation-1 overflow-hidden\"><div class=\"px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2\"><span class=\"material-icons-round text-green-700 text-[18px]\">add_circle</span> <span class=\"text-xs font-semibold text-gray-600 uppercase tracking-wider\">Yeni Grup Oluştur</span><div class=\"ml-auto relative\"><span class=\"absolute left-2 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[15px] pointer-events-none\">search</span> <input type=\"text\" placeholder=\"Grup ara...\" oninput=\"filterWaGroups(this.value)\" class=\"pl-7 pr-3 py-1 text-xs border border-gray-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-green-400 bg-gray-50 w-36\"></div></div><form method=\"POST\" action=\"/groups/create\" class=\"p-6 space-y-4\"><!-- WA grup listesi --><div><p class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2\">WhatsApp Grupları</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -72,7 +72,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"space-y-1 max-h-64 overflow-y-auto pr-1\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"wa-groups-list\" class=\"space-y-1 max-h-64 overflow-y-auto pr-1\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -84,7 +84,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var3 string
 					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(g.JID)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 53, Col: 60}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 62, Col: 60}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 					if templ_7745c5c3_Err != nil {
@@ -97,7 +97,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(g.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 57, Col: 64}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 66, Col: 64}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -125,7 +125,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(contactGroups)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 93, Col: 139}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 102, Col: 139}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -158,7 +158,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 111, Col: 77}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 120, Col: 77}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -171,7 +171,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d WhatsApp grubu", len(cg.JIDs)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 112, Col: 97}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 121, Col: 97}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {
@@ -184,7 +184,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var8 string
 					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", cg.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 116, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 125, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 					if templ_7745c5c3_Err != nil {
@@ -212,7 +212,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(msgTpls)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 184, Col: 133}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 193, Col: 133}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -262,7 +262,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(t.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 204, Col: 68}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 213, Col: 68}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -275,7 +275,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(t.Content)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 205, Col: 73}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 214, Col: 73}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -288,7 +288,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(t.CreatedAt.Format("02.01.2006"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 211, Col: 85}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 220, Col: 85}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -301,7 +301,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", t.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 213, Col: 74}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 222, Col: 74}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 					if templ_7745c5c3_Err != nil {
@@ -334,7 +334,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var15 string
 					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cg:%d", cg.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 245, Col: 55}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 254, Col: 55}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {
@@ -347,7 +347,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var16 string
 					templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 245, Col: 67}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 254, Col: 67}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 					if templ_7745c5c3_Err != nil {
@@ -376,7 +376,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var17 string
 					templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(g.JID)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 252, Col: 33}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 261, Col: 33}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 					if templ_7745c5c3_Err != nil {
@@ -389,7 +389,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var18 string
 					templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(g.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 252, Col: 44}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 261, Col: 44}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 					if templ_7745c5c3_Err != nil {
@@ -422,7 +422,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var19 string
 					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cg:%d", cg.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 315, Col: 55}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 324, Col: 55}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 					if templ_7745c5c3_Err != nil {
@@ -435,7 +435,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 315, Col: 67}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 324, Col: 67}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -464,7 +464,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var21 string
 					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(g.JID)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 322, Col: 33}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 331, Col: 33}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 					if templ_7745c5c3_Err != nil {
@@ -477,7 +477,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					var templ_7745c5c3_Var22 string
 					templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(g.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 322, Col: 44}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/schedule.templ`, Line: 331, Col: 44}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 					if templ_7745c5c3_Err != nil {
@@ -493,7 +493,7 @@ func ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTp
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</select></div></div><!-- Caption boş gönderilecek --><input type=\"hidden\" name=\"caption\" value=\"\"><!-- Dosya seçimi — arşivden --><div><p class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2\">Arşivden Dosya Seç</p><input type=\"hidden\" id=\"send-only-file-id\" name=\"file_id\" required><div id=\"send-only-browser\" class=\"border border-gray-200 rounded-2xl overflow-hidden\"><div id=\"send-only-breadcrumb\" class=\"px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-1 text-xs text-gray-400\"><button type=\"button\" onclick=\"browseFolder(0,'send-only')\" class=\"flex items-center gap-1 hover:text-green-700 transition-colors\"><span class=\"material-icons-round text-[14px]\">home</span> Ana Klasör</button></div><div id=\"send-only-list\" class=\"max-h-52 overflow-y-auto p-2 space-y-1\"><!-- JS ile doldurulacak --></div><div id=\"send-only-selected\" class=\"hidden px-4 py-2 bg-green-50 border-t border-green-200 text-xs text-green-700 flex items-center gap-2\"><span class=\"material-icons-round text-[14px]\">check_circle</span> <span id=\"send-only-selected-name\"></span></div></div></div><button type=\"submit\" class=\"md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm\"><span class=\"material-icons-round text-[18px]\">send</span> Resim Gönder</button></form></div></div></div><!-- Medya tarayıcı JS --> <script>\n\t\tvar _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px]\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-amber-50 text-left transition-colors';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[20px]\">folder</span><span class=\"text-xs text-gray-700\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 text-left transition-colors';\n\t\t\t\tconst icon = mimeIcon(f.mime_type);\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-8 h-8 rounded-lg object-cover shrink-0\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[20px]\">${icon}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-4\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tdocument.getElementById(prefix + '-selected-name').textContent = f.name;\n\t\t}\n\t\t// Init browsers on page load\n\t\tdocument.addEventListener('DOMContentLoaded', () => {\n\t\t\tbrowseFolder(0, 'send-img');\n\t\t\tbrowseFolder(0, 'send-only');\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "</select></div></div><!-- Caption boş gönderilecek --><input type=\"hidden\" name=\"caption\" value=\"\"><!-- Dosya seçimi — arşivden --><div><p class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2\">Arşivden Dosya Seç</p><input type=\"hidden\" id=\"send-only-file-id\" name=\"file_id\" required><div id=\"send-only-browser\" class=\"border border-gray-200 rounded-2xl overflow-hidden\"><div id=\"send-only-breadcrumb\" class=\"px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-1 text-xs text-gray-400\"><button type=\"button\" onclick=\"browseFolder(0,'send-only')\" class=\"flex items-center gap-1 hover:text-green-700 transition-colors\"><span class=\"material-icons-round text-[14px]\">home</span> Ana Klasör</button></div><div id=\"send-only-list\" class=\"max-h-52 overflow-y-auto p-2 space-y-1\"><!-- JS ile doldurulacak --></div><div id=\"send-only-selected\" class=\"hidden px-4 py-2 bg-green-50 border-t border-green-200 text-xs text-green-700 flex items-center gap-2\"><span class=\"material-icons-round text-[14px]\">check_circle</span> <span id=\"send-only-selected-name\"></span></div></div></div><button type=\"submit\" class=\"md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm\"><span class=\"material-icons-round text-[18px]\">send</span> Resim Gönder</button></form></div></div></div><!-- Medya tarayıcı JS --> <script>\n\t\tvar _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px]\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-amber-50 text-left transition-colors';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[20px]\">folder</span><span class=\"text-xs text-gray-700\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 text-left transition-colors';\n\t\t\t\tconst icon = mimeIcon(f.mime_type);\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-8 h-8 rounded-lg object-cover shrink-0\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[20px]\">${icon}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-4\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tdocument.getElementById(prefix + '-selected-name').textContent = f.name;\n\t\t}\n\t\t// Init browsers on page load\n\t\tdocument.addEventListener('DOMContentLoaded', () => {\n\t\t\tbrowseFolder(0, 'send-img');\n\t\t\tbrowseFolder(0, 'send-only');\n\t\t});\n\t\tfunction filterWaGroups(q) {\n\t\t\tvar lower = q.toLowerCase();\n\t\t\tvar list = document.getElementById('wa-groups-list');\n\t\t\tif (!list) return;\n\t\t\tlist.querySelectorAll('label').forEach(function(label) {\n\t\t\t\tvar nameEl = label.querySelector('span.text-sm');\n\t\t\t\tvar name = nameEl ? nameEl.textContent.toLowerCase() : '';\n\t\t\t\tlabel.style.display = name.includes(lower) ? '' : 'none';\n\t\t\t});\n\t\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
