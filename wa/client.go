@@ -103,7 +103,7 @@ func (c *Client) loginWithQR(ctx context.Context) {
 			c.mu.Lock()
 			c.qrCode = evt.Code
 			c.mu.Unlock()
-			log.Println("wa: QR kodu güncellendi → http://localhost:8080")
+			log.Println("wa: QR kodu güncellendi → http://localhost:8081")
 		case "success":
 			c.mu.Lock()
 			c.qrCode = ""

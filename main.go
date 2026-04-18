@@ -36,8 +36,8 @@ func main() {
 
 	srv := web.NewServer(db, waClient)
 	go func() {
-		log.Println("Server başlatıldı → http://localhost:8080")
-		if err := http.ListenAndServe(":8080", srv); err != nil && err != http.ErrServerClosed {
+		log.Println("Server başlatıldı → http://localhost:8081")
+		if err := http.ListenAndServe(":8081", srv); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("http: %v", err)
 		}
 	}()
