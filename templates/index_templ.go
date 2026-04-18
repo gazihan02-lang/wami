@@ -102,9 +102,9 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var4 string
-					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(msg.ScheduledAt.Local().Format("02.01.2006 · 15:04"))
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(msg.ScheduledAt.Format("02.01.2006 · 15:04"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 140, Col: 129}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 140, Col: 121}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {

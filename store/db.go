@@ -187,6 +187,7 @@ func (d *DB) DeleteScheduledMessage(id int64) error {
 }
 
 func (d *DB) GetAllScheduled() ([]ScheduledMessage, error) {
+	istanbul, _ := time.LoadLocation("Europe/Istanbul")
 	rows, err := d.db.Query(
 		`SELECT sm.id, sm.phone, sm.message, sm.scheduled_at, sm.sent, sm.created_at,
 		        sm.msg_type, sm.file_id, sm.repeat_rule,
@@ -209,6 +210,7 @@ func (d *DB) GetAllScheduled() ([]ScheduledMessage, error) {
 			return nil, err
 		}
 		m.ScheduledAt, _ = time.Parse(time.RFC3339, scheduledStr)
+		m.ScheduledAt = m.ScheduledAt.In(istanbul)
 		m.CreatedAt, _ = time.Parse(time.RFC3339, createdStr)
 		msgs = append(msgs, m)
 	}
