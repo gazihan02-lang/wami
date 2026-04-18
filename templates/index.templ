@@ -2,6 +2,8 @@ package templates
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"wami/store"
 	"wami/wa"
 )
@@ -124,6 +126,7 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 							<thead>
 								<tr class="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/70">
 									<th class="px-6 py-3">Zaman</th>
+									<th class="px-6 py-3">Hedef</th>
 									<th class="px-6 py-3">Tür</th>
 									<th class="px-6 py-3">Mesaj</th>
 									<th class="px-6 py-3">Tekrar</th>
@@ -135,6 +138,12 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 								for _, msg := range scheduled {
 									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
 										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
+										<td class="px-6 py-3.5 text-gray-600 text-xs">
+											<span class="inline-flex items-center gap-1">
+												<span class="material-icons-round text-[14px] text-gray-400">group</span>
+												{ resolveTarget(msg.Phone, contactGroups) }
+											</span>
+										</td>
 										<td class="px-6 py-3.5">
 											@msgTypeTooltip(msg)
 										</td>
@@ -522,6 +531,22 @@ templ repeatBadge(r string) {
 		default:
 			<span class="text-xs text-gray-300">—</span>
 	}
+}
+
+func resolveTarget(phone string, groups []store.ContactGroup) string {
+	if strings.HasPrefix(phone, "cg:") {
+		idStr := strings.TrimPrefix(phone, "cg:")
+		id, err := strconv.ParseInt(idStr, 10, 64)
+		if err == nil {
+			for _, g := range groups {
+				if g.ID == id {
+					return g.Name
+				}
+			}
+		}
+		return "Grup #" + idStr
+	}
+	return phone
 }
 
 func formatCount(n int) string {
