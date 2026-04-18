@@ -123,10 +123,10 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 						<table class="w-full text-sm">
 							<thead>
 								<tr class="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/70">
-									<th class="px-6 py-3">Mesaj</th>
-									<th class="px-6 py-3">Tür</th>
-									<th class="px-6 py-3">Tekrar</th>
 									<th class="px-6 py-3">Zaman</th>
+									<th class="px-6 py-3">Tür</th>
+									<th class="px-6 py-3">Mesaj</th>
+									<th class="px-6 py-3">Tekrar</th>
 									<th class="px-6 py-3">Durum</th>
 									<th class="px-6 py-3 w-10"></th>
 								</tr>
@@ -134,6 +134,10 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 							<tbody>
 								for _, msg := range scheduled {
 									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
+										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
+										<td class="px-6 py-3.5">
+											@msgTypeBadge(msg.MsgType)
+										</td>
 										<td class="px-6 py-3.5 text-gray-700 max-w-[240px]">
 											<span class="block truncate" title={ msg.Message }>
 												if msg.Message != "" {
@@ -144,12 +148,8 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 											</span>
 										</td>
 										<td class="px-6 py-3.5">
-											@msgTypeBadge(msg.MsgType)
-										</td>
-										<td class="px-6 py-3.5">
 											@repeatBadge(msg.RepeatRule)
 										</td>
-										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
 										<td class="px-6 py-3.5">
 											if msg.Sent {
 												<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
