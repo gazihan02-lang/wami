@@ -8,7 +8,7 @@ import (
 	"wami/wa"
 )
 
-templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGroups []wa.Group, contactGroups []store.ContactGroup) {
+templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGroups []wa.Group, contactGroups []store.ContactGroup, msgTpls []store.MessageTemplate) {
 	@Layout("Dashboard") {
 		<div class="space-y-5">
 			<!-- MD3 Hero row -->
@@ -237,6 +237,18 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 								}
 							</select>
 						</div>
+						<!-- Hızlı Mesaj Şablonu -->
+						if len(msgTpls) > 0 {
+							<div>
+								<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Hızlı Mesaj Şablonu</label>
+								<select id="modal-tpl-select" onchange="applyTemplate(this)" class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all">
+									<option value="">Şablon seçin (opsiyonel)...</option>
+									for _, tpl := range msgTpls {
+										<option value={ tpl.Content }>{ tpl.Name }</option>
+									}
+								</select>
+							</div>
+						}
 						<!-- TAB: text -->
 						<div id="tab-text" class="tab-panel space-y-4">
 							<div>
@@ -314,6 +326,16 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 			document.body.style.overflow = '';
 		}
 		document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });
+
+		/* --- Template apply --- */
+		function applyTemplate(sel) {
+			const val = sel.value;
+			if (!val) return;
+			const ta = document.getElementById('modal-message');
+			if (ta) ta.value = val;
+			const cap = document.getElementById('modal-caption');
+			if (cap) cap.value = val;
+		}
 
 		/* --- Tab switching --- */
 		let currentTab = 'text';

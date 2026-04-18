@@ -48,8 +48,9 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 
 	waGroups, _ := s.client.GetGroups(r.Context())
 	contactGroups, _ := s.db.GetContactGroups()
+	msgTpls, _ := s.db.GetMessageTemplates()
 
-	templates.Index(connected, hasQR, scheduled, waGroups, contactGroups).Render(r.Context(), w)
+	templates.Index(connected, hasQR, scheduled, waGroups, contactGroups, msgTpls).Render(r.Context(), w)
 }
 
 func (s *Server) handleScheduleForm(w http.ResponseWriter, r *http.Request) {
