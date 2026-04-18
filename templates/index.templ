@@ -1,0 +1,525 @@
+package templates
+
+import (
+	"fmt"
+	"wami/store"
+	"wami/wa"
+)
+
+templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGroups []wa.Group, contactGroups []store.ContactGroup) {
+	@Layout("Dashboard") {
+		<div class="space-y-5">
+			<!-- MD3 Hero row -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+				<!-- Bağlantı Durumu — MD3 Filled Card -->
+				<div class="md:col-span-2 bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-1 flex items-center gap-2 border-b border-gray-100">
+						<span class="material-icons-round text-green-700 text-[20px]">sensors</span>
+						<span class="text-sm font-semibold text-gray-700 tracking-wide uppercase text-[11px]">Bağlantı Durumu</span>
+					</div>
+					<div class="px-6 py-5">
+						if connected {
+							<div class="flex items-center justify-between">
+								<div class="flex items-center gap-3">
+									<div class="relative flex h-3 w-3">
+										<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+										<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+									</div>
+									<div>
+										<p class="text-base font-semibold text-green-700">Bağlı</p>
+										<p class="text-xs text-gray-400 mt-0.5">WhatsApp oturumu aktif</p>
+									</div>
+								</div>
+								<div class="flex items-center gap-2">
+									<form method="POST" action="/reset" onsubmit="return confirm('Tüm veriler (mesajlar, gruplar, şablonlar, dosyalar) silinecek. Emin misiniz?')">
+										<button type="submit" class="md-focus flex items-center gap-1.5 text-sm text-orange-600 border border-orange-200 bg-orange-50 hover:bg-orange-100 px-4 py-2 rounded-xl font-medium transition-colors">
+											<span class="material-icons-round text-[16px]">restart_alt</span>
+											Sıfırla
+										</button>
+									</form>
+									<form method="POST" action="/logout" onsubmit="return confirm('Cihazı kaldırmak istediğinize emin misiniz?')">
+										<button type="submit" class="md-focus flex items-center gap-1.5 text-sm text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl font-medium transition-colors">
+											<span class="material-icons-round text-[16px]">logout</span>
+											Cihazı Kaldır
+										</button>
+									</form>
+								</div>
+							</div>
+						} else if hasQR {
+							<div class="space-y-4">
+								<div class="flex items-center gap-3">
+									<span class="w-3 h-3 bg-amber-400 rounded-full inline-block ring-2 ring-amber-200"></span>
+									<div>
+										<p class="text-base font-semibold text-amber-700">QR Bekleniyor</p>
+										<p class="text-xs text-gray-400 mt-0.5">WhatsApp → Bağlı Cihazlar → Cihaz Ekle</p>
+									</div>
+								</div>
+								<div class="flex gap-6 items-start">
+									<div class="bg-white p-2 rounded-2xl md-elevation-2 shrink-0">
+										<img id="qr-img" src="/api/qr.png" alt="QR" class="w-48 h-48 rounded-xl"/>
+									</div>
+									<ol class="text-sm text-gray-500 space-y-2 list-none mt-2">
+										<li class="flex items-start gap-2"><span class="w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>WhatsApp'ı aç</li>
+										<li class="flex items-start gap-2"><span class="w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>⋯ → Bağlı Cihazlar</li>
+										<li class="flex items-start gap-2"><span class="w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>Cihaz Ekle → Kodu okut</li>
+									</ol>
+								</div>
+								<script>
+									setInterval(function(){
+										fetch('/api/status').then(r=>r.json()).then(d=>{
+											if(d.logged_in){window.location.reload();}
+											else if(d.has_qr){document.getElementById('qr-img').src='/api/qr.png?t='+Date.now();}
+										});
+									},15000);
+								</script>
+							</div>
+						} else {
+							<div class="flex items-center gap-3">
+								<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+									<span class="material-icons-round text-gray-400 text-[18px] animate-spin" style="animation-duration:2s">sync</span>
+								</div>
+								<div>
+									<p class="text-sm font-medium text-gray-600">Bağlanılıyor...</p>
+									<p class="text-xs text-gray-400">Lütfen bekleyin</p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+				<!-- Özet stat card -->
+				<div class="bg-green-700 rounded-3xl md-elevation-2 p-6 flex flex-col justify-between text-white">
+					<div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center mb-4">
+						<span class="material-icons-round text-[22px]">bar_chart</span>
+					</div>
+					<div>
+						<p class="text-4xl font-bold leading-none">{ formatCount(len(scheduled)) }</p>
+						<p class="text-sm text-green-200 mt-1">Planlanmış mesaj</p>
+					</div>
+					<button type="button" onclick="openScheduleModal()" class="mt-4 flex items-center gap-1 text-xs font-semibold text-white/80 hover:text-white transition-colors cursor-pointer">
+						<span>Yeni planla</span>
+						<span class="material-icons-round text-[16px]">arrow_forward</span>
+					</button>
+				</div>
+			</div>
+			<!-- Planlanmış Mesajlar Tablosu — MD3 Outlined Card -->
+			<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+				<div class="px-6 pt-5 pb-4 flex items-center justify-between border-b border-gray-100">
+					<div class="flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[20px]">event_note</span>
+						<span class="text-sm font-semibold text-gray-700">Planlanmış Mesajlar</span>
+					</div>
+					<button type="button" onclick="openScheduleModal()" class="md-focus flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors">
+						<span class="material-icons-round text-[16px]">add</span>
+						Yeni Planla
+					</button>
+				</div>
+				if len(scheduled) == 0 {
+					<div class="flex flex-col items-center justify-center py-14 text-gray-300 gap-3">
+						<span class="material-icons-round text-[52px]">event_busy</span>
+						<p class="text-sm text-gray-400">Henüz planlanmış mesaj yok</p>
+					</div>
+				} else {
+					<div class="overflow-x-auto">
+						<table class="w-full text-sm">
+							<thead>
+								<tr class="text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/70">
+									<th class="px-6 py-3">Hedef</th>
+									<th class="px-6 py-3">Mesaj</th>
+									<th class="px-6 py-3">Tür</th>
+									<th class="px-6 py-3">Tekrar</th>
+									<th class="px-6 py-3">Zaman</th>
+									<th class="px-6 py-3">Durum</th>
+									<th class="px-6 py-3 w-10"></th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, msg := range scheduled {
+									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
+										<td class="px-6 py-3.5 text-gray-600 font-mono text-xs">{ msg.Phone }</td>
+										<td class="px-6 py-3.5 text-gray-700 max-w-[240px]">
+											<span class="block truncate" title={ msg.Message }>
+												if msg.Message != "" {
+													{ msg.Message }
+												} else {
+													<span class="text-gray-300 italic">—</span>
+												}
+											</span>
+										</td>
+										<td class="px-6 py-3.5">
+											@msgTypeBadge(msg.MsgType)
+										</td>
+										<td class="px-6 py-3.5">
+											@repeatBadge(msg.RepeatRule)
+										</td>
+										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
+										<td class="px-6 py-3.5">
+											if msg.Sent {
+												<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+													<span class="material-icons-round text-[13px]">check_circle</span>Gönderildi
+												</span>
+											} else {
+												<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+													<span class="material-icons-round text-[13px]">schedule</span>Bekliyor
+												</span>
+											}
+										</td>
+										<td class="px-6 py-3.5">
+											if !msg.Sent {
+												<form method="POST" action="/schedule/delete" onsubmit="return confirm('Bu planlamayı silmek istediğinize emin misiniz?')">
+													<input type="hidden" name="id" value={ fmt.Sprintf("%d", msg.ID) }/>
+													<button type="submit" class="w-8 h-8 rounded-xl hover:bg-red-50 flex items-center justify-center transition-colors group">
+														<span class="material-icons-round text-gray-300 group-hover:text-red-500 text-[18px]">delete_outline</span>
+													</button>
+												</form>
+											}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				}
+			</div>
+		</div>
+		<!-- ========================= SCHEDULE MODAL ========================= -->
+		<div id="schedule-modal" class="fixed inset-0 z-50 hidden">
+			<!-- Backdrop -->
+			<div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeScheduleModal()"></div>
+			<!-- Modal panel -->
+			<div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[640px] md:max-h-[90vh] bg-white rounded-3xl md-elevation-3 flex flex-col overflow-hidden animate-modal-in">
+				<!-- Header -->
+				<div class="px-6 pt-5 pb-4 border-b border-gray-100 flex items-center justify-between shrink-0">
+					<div class="flex items-center gap-3">
+						<div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center">
+							<span class="material-icons-round text-green-700 text-[20px]">schedule_send</span>
+						</div>
+						<div>
+							<h2 class="text-lg font-bold text-gray-800 leading-tight">Yeni Planla</h2>
+							<p class="text-[11px] text-gray-400">Mesaj veya medya zamanlayın</p>
+						</div>
+					</div>
+					<button type="button" onclick="closeScheduleModal()" class="w-8 h-8 rounded-xl hover:bg-gray-100 flex items-center justify-center transition-colors">
+						<span class="material-icons-round text-gray-400 text-[20px]">close</span>
+					</button>
+				</div>
+				<!-- Tabs -->
+				<div class="px-6 pt-3 flex gap-1 shrink-0 border-b border-gray-100">
+					<button type="button" onclick="switchTab('text')" id="tab-btn-text" class="tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 transition-all flex items-center gap-1.5 border-green-600 text-green-700 bg-green-50/60">
+						<span class="material-icons-round text-[16px]">chat</span>Mesaj
+					</button>
+					<button type="button" onclick="switchTab('image')" id="tab-btn-image" class="tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 transition-all flex items-center gap-1.5 border-transparent text-gray-400 hover:text-gray-600">
+						<span class="material-icons-round text-[16px]">photo_library</span>Resim + Mesaj
+					</button>
+					<button type="button" onclick="switchTab('image_only')" id="tab-btn-image_only" class="tab-btn px-4 py-2.5 text-xs font-semibold rounded-t-xl border-b-2 transition-all flex items-center gap-1.5 border-transparent text-gray-400 hover:text-gray-600">
+						<span class="material-icons-round text-[16px]">image</span>Sadece Resim
+					</button>
+				</div>
+				<!-- Form body (scrollable) -->
+				<form method="POST" action="/schedule" id="schedule-form" class="flex-1 overflow-y-auto">
+					<input type="hidden" name="msg_type" id="modal-msg-type" value="text"/>
+					<input type="hidden" name="file_id" id="modal-file-id" value=""/>
+					<input type="hidden" name="message" id="modal-message-hidden" value=""/>
+					<div class="p-6 space-y-5">
+						<!-- Hedef seçim -->
+						<div>
+							<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Hedef Grup / Kişi</label>
+							<select name="phone" id="modal-phone" required class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all">
+								<option value="" disabled selected>Seçiniz...</option>
+								if len(waGroups) > 0 {
+									<optgroup label="WhatsApp Grupları">
+										for _, g := range waGroups {
+											<option value={ g.JID }>{ g.Name }</option>
+										}
+									</optgroup>
+								}
+								if len(contactGroups) > 0 {
+									<optgroup label="Kişi Grupları">
+										for _, cg := range contactGroups {
+											<option value={ fmt.Sprintf("cg:%d", cg.ID) }>{ cg.Name }</option>
+										}
+									</optgroup>
+								}
+							</select>
+						</div>
+						<!-- TAB: text -->
+						<div id="tab-text" class="tab-panel space-y-4">
+							<div>
+								<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Mesaj</label>
+								<textarea id="modal-message" rows="4" placeholder="Mesajınızı yazın..." class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all"></textarea>
+							</div>
+						</div>
+						<!-- TAB: image (resim + mesaj) -->
+						<div id="tab-image" class="tab-panel hidden space-y-4">
+							<!-- Arşiv tarayıcı -->
+							@mediaBrowserBlock("modal-img")
+							<div>
+								<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Mesaj (opsiyonel)</label>
+								<textarea id="modal-caption" rows="3" placeholder="Resim açıklaması (isteğe bağlı)..." class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all"></textarea>
+							</div>
+						</div>
+						<!-- TAB: image_only -->
+						<div id="tab-image_only" class="tab-panel hidden space-y-4">
+							@mediaBrowserBlock("modal-only")
+						</div>
+						<!-- Zamanlama -->
+						<div>
+							<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-3">Zamanlama</label>
+							<div class="grid grid-cols-5 gap-3">
+								<div class="col-span-2">
+									<label class="text-[10px] font-medium text-gray-400 block mb-1">Tarih</label>
+									<input type="date" name="scheduled_date" required class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all"/>
+								</div>
+								<div class="col-span-1">
+									<label class="text-[10px] font-medium text-gray-400 block mb-1">Saat</label>
+									<input type="time" name="scheduled_time" required class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all"/>
+								</div>
+								<div class="col-span-2">
+									<label class="text-[10px] font-medium text-gray-400 block mb-1">Tekrar</label>
+									<select name="repeat_rule" class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all">
+										<option value="">Tek Sefer</option>
+										<option value="daily">Her Gün</option>
+										<option value="weekly">Her Hafta</option>
+										<option value="monthly">Her Ay</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Footer -->
+					<div class="px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex justify-end gap-3 shrink-0">
+						<button type="button" onclick="closeScheduleModal()" class="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">
+							İptal
+						</button>
+						<button type="submit" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1">
+							<span class="material-icons-round text-[16px]">schedule_send</span>
+							Planla
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- Schedule Modal JS -->
+		<style>
+			@keyframes modal-in {
+				from { opacity: 0; transform: translateY(24px) scale(0.97); }
+				to { opacity: 1; transform: translateY(0) scale(1); }
+			}
+			.animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+		</style>
+		<script>
+		/* --- Modal open/close --- */
+		function openScheduleModal() {
+			document.getElementById('schedule-modal').classList.remove('hidden');
+			document.body.style.overflow = 'hidden';
+			initBrowsers();
+		}
+		function closeScheduleModal() {
+			document.getElementById('schedule-modal').classList.add('hidden');
+			document.body.style.overflow = '';
+		}
+		document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });
+
+		/* --- Tab switching --- */
+		let currentTab = 'text';
+		function switchTab(tab) {
+			currentTab = tab;
+			document.getElementById('modal-msg-type').value = tab;
+			// Update tab buttons
+			document.querySelectorAll('.tab-btn').forEach(btn => {
+				btn.classList.remove('border-green-600','text-green-700','bg-green-50/60');
+				btn.classList.add('border-transparent','text-gray-400');
+			});
+			const active = document.getElementById('tab-btn-' + tab);
+			active.classList.remove('border-transparent','text-gray-400');
+			active.classList.add('border-green-600','text-green-700','bg-green-50/60');
+			// Show/hide panels
+			document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+			document.getElementById('tab-' + tab).classList.remove('hidden');
+			// Sync file_id from the active browser
+			syncFileId();
+		}
+		function syncFileId() {
+			let fid = '';
+			if (currentTab === 'image') {
+				fid = document.getElementById('modal-img-file-id')?.value || '';
+			} else if (currentTab === 'image_only') {
+				fid = document.getElementById('modal-only-file-id')?.value || '';
+			}
+			document.getElementById('modal-file-id').value = fid;
+		}
+
+		/* --- Media browser --- */
+		let _mediaData = null;
+		async function getMediaData() {
+			if (!_mediaData) {
+				const r = await fetch('/api/media-tree');
+				_mediaData = await r.json();
+			}
+			return _mediaData;
+		}
+		function mimeIcon(m) {
+			if (m.startsWith('image/')) return 'image';
+			if (m.startsWith('video/')) return 'videocam';
+			if (m.startsWith('audio/')) return 'audiotrack';
+			return 'insert_drive_file';
+		}
+		async function browseFolder(folderId, prefix) {
+			const data = await getMediaData();
+			const list = document.getElementById(prefix + '-list');
+			const bc = document.getElementById(prefix + '-breadcrumb');
+			list.innerHTML = '';
+
+			// breadcrumb
+			let crumbs = [{id:0, name:'Ana Klasör'}];
+			if (folderId > 0) {
+				let cur = folderId;
+				let chain = [];
+				while (cur > 0) {
+					const f = (data.folders||[]).find(x => x.id === cur);
+					if (!f) break;
+					chain.unshift(f);
+					cur = f.parent_id;
+				}
+				crumbs = crumbs.concat(chain);
+			}
+			bc.innerHTML = crumbs.map((c, i) => {
+				if (i === crumbs.length - 1) {
+					return `<span class="font-semibold text-green-700">${i===0?'<span class="material-icons-round text-[14px]">home</span> ':''}${c.name}</span>`;
+				}
+				return `<button type="button" onclick="browseFolder(${c.id},'${prefix}')" class="hover:text-green-700 transition-colors">${i===0?'<span class="material-icons-round text-[14px]">home</span> ':''}${c.name}</button><span class="material-icons-round text-[12px] text-gray-300">chevron_right</span>`;
+			}).join('');
+
+			// folders
+			const subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);
+			subFolders.forEach(f => {
+				const el = document.createElement('button');
+				el.type = 'button';
+				el.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-left transition-colors group';
+				el.innerHTML = `<span class="material-icons-round text-amber-500 text-[22px] group-hover:text-amber-600 transition-colors">folder</span><span class="text-xs text-gray-700 font-medium">${f.name}</span>`;
+				el.onclick = () => browseFolder(f.id, prefix);
+				list.appendChild(el);
+			});
+
+			// files (only images for sending)
+			const subFiles = (data.files||[]).filter(f => f.folder_id === folderId);
+			subFiles.forEach(f => {
+				const el = document.createElement('button');
+				el.type = 'button';
+				el.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-green-50 text-left transition-colors group';
+				const isImg = f.mime_type.startsWith('image/');
+				el.innerHTML = isImg
+					? `<img src="/${f.path}" class="w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-gray-200"/><span class="text-xs text-gray-700 truncate">${f.name}</span>`
+					: `<span class="material-icons-round text-gray-400 text-[22px]">${mimeIcon(f.mime_type)}</span><span class="text-xs text-gray-700 truncate">${f.name}</span>`;
+				el.onclick = () => selectFile(f, prefix);
+				list.appendChild(el);
+			});
+
+			if (subFolders.length === 0 && subFiles.length === 0) {
+				list.innerHTML = '<p class="text-xs text-gray-300 text-center py-6">Boş klasör</p>';
+			}
+		}
+		function selectFile(f, prefix) {
+			document.getElementById(prefix + '-file-id').value = f.id;
+			const sel = document.getElementById(prefix + '-selected');
+			sel.classList.remove('hidden');
+			const nameEl = document.getElementById(prefix + '-selected-name');
+			nameEl.textContent = f.name;
+			const thumbEl = document.getElementById(prefix + '-selected-thumb');
+			if (f.mime_type.startsWith('image/')) {
+				thumbEl.src = '/' + f.path;
+				thumbEl.classList.remove('hidden');
+			} else {
+				thumbEl.classList.add('hidden');
+			}
+			// Sync to main hidden input
+			syncFileId();
+		}
+		let _browsersInitialized = false;
+		function initBrowsers() {
+			if (_browsersInitialized) return;
+			_browsersInitialized = true;
+			browseFolder(0, 'modal-img');
+			browseFolder(0, 'modal-only');
+		}
+		/* --- Form submit: sync message from active tab --- */
+		document.getElementById('schedule-form').addEventListener('submit', function() {
+			let msg = '';
+			if (currentTab === 'text') {
+				msg = document.getElementById('modal-message').value;
+			} else if (currentTab === 'image') {
+				msg = document.getElementById('modal-caption').value;
+			}
+			document.getElementById('modal-message-hidden').value = msg;
+		});
+		</script>
+	}
+}
+
+templ mediaBrowserBlock(prefix string) {
+	<div>
+		<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Arşivden Resim Seç</label>
+		<input type="hidden" id={ prefix + "-file-id" } value=""/>
+		<div class="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50/50">
+			<!-- Breadcrumb -->
+			<div id={ prefix + "-breadcrumb" } class="flex items-center gap-1 px-4 py-2.5 bg-white border-b border-gray-100 text-xs text-gray-500 min-h-[36px]"></div>
+			<!-- File list -->
+			<div id={ prefix + "-list" } class="max-h-48 overflow-y-auto p-2 space-y-0.5">
+				<p class="text-xs text-gray-300 text-center py-6">Yükleniyor...</p>
+			</div>
+		</div>
+		<!-- Selected file indicator -->
+		<div id={ prefix + "-selected" } class="hidden mt-2 flex items-center gap-3 px-4 py-2.5 bg-green-50 border border-green-200 rounded-xl">
+			<img id={ prefix + "-selected-thumb" } src="" class="w-8 h-8 rounded-lg object-cover shrink-0 hidden"/>
+			<span class="material-icons-round text-green-600 text-[18px]">check_circle</span>
+			<span id={ prefix + "-selected-name" } class="text-xs font-semibold text-green-700 truncate"></span>
+		</div>
+	</div>
+}
+
+templ msgTypeBadge(t string) {
+	switch t {
+		case "image":
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+				<span class="material-icons-round text-[13px]">photo_library</span>Resim+Mesaj
+			</span>
+		case "image_only":
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+				<span class="material-icons-round text-[13px]">image</span>Sadece Resim
+			</span>
+		default:
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
+				<span class="material-icons-round text-[13px]">chat</span>Mesaj
+			</span>
+	}
+}
+
+templ repeatBadge(r string) {
+	switch r {
+		case "daily":
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700">
+				<span class="material-icons-round text-[13px]">repeat</span>Her Gün
+			</span>
+		case "weekly":
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
+				<span class="material-icons-round text-[13px]">repeat</span>Her Hafta
+			</span>
+		case "monthly":
+			<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
+				<span class="material-icons-round text-[13px]">repeat</span>Her Ay
+			</span>
+		default:
+			<span class="text-xs text-gray-300">—</span>
+	}
+}
+
+func formatCount(n int) string {
+	if n == 0 {
+		return "0"
+	}
+	s := ""
+	for n > 0 {
+		s = string(rune('0'+n%10)) + s
+		n /= 10
+	}
+	return s
+}

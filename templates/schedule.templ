@@ -1,0 +1,447 @@
+package templates
+
+import (
+	"fmt"
+	"wami/store"
+	"wami/wa"
+)
+
+script copyTemplate(content string) {
+	var ta = document.getElementById('tpl-content');
+	if (ta) {
+		ta.value = content;
+		ta.dispatchEvent(new Event('input'));
+		ta.scrollIntoView({behavior:'smooth', block:'nearest'});
+	}
+}
+
+templ ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgTpls []store.MessageTemplate, mediaFolders []store.MediaFolder, mediaFiles []store.MediaFile) {
+	@Layout("Mesaj Planla") {
+		<div class="space-y-5">
+			<!-- Page header -->
+			<div class="flex items-center gap-3">
+				<div class="w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1">
+					<span class="material-icons-round text-white text-[20px]">schedule_send</span>
+				</div>
+				<div>
+					<h2 class="text-xl font-bold text-gray-800 leading-tight">Mesaj Planla</h2>
+					<p class="text-xs text-gray-400">Grup oluştur ve zamanlı mesaj gönder</p>
+				</div>
+			</div>
+			<!-- ÜST: Grup yönetimi — MD3 2-col grid -->
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+				<!-- SOL: Yeni grup oluştur -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">add_circle</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Yeni Grup Oluştur</span>
+					</div>
+					<form method="POST" action="/groups/create" class="p-6 space-y-4">
+						<!-- WA grup listesi -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">WhatsApp Grupları</p>
+							if len(waGroups) == 0 {
+								<div class="flex items-center gap-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+									<span class="material-icons-round text-[16px]">info</span>
+									Bağlı grup bulunamadı. Giriş yapıp yenile.
+								</div>
+							} else {
+								<div class="space-y-1 max-h-64 overflow-y-auto pr-1">
+									for _, g := range waGroups {
+										<label class="flex items-center gap-3 px-3 py-2.5 rounded-2xl border border-gray-100 hover:border-green-400 hover:bg-green-50/60 cursor-pointer transition-all duration-150 group">
+											<span class="w-5 h-5 rounded-md border-2 border-gray-300 group-hover:border-green-500 flex items-center justify-center shrink-0 transition-colors has-[:checked]:bg-green-600 has-[:checked]:border-green-600">
+												<input type="checkbox" name="jids" value={ g.JID } class="sr-only peer"/>
+												<span class="material-icons-round text-white text-[13px] opacity-0 peer-checked:opacity-100">check</span>
+											</span>
+											<span class="material-icons-round text-gray-300 group-hover:text-green-400 text-[17px] shrink-0 transition-colors">group</span>
+											<span class="text-sm text-gray-700 truncate">{ g.Name }</span>
+										</label>
+									}
+								</div>
+							}
+						</div>
+						<!-- İsim -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Grup İsmi</p>
+							<div class="relative">
+								<span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[18px]">label</span>
+								<input
+									type="text"
+									name="group_name"
+									placeholder="örn: Satış Ekibi"
+									required
+									class="w-full border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50 transition-colors"
+								/>
+							</div>
+						</div>
+						<!-- Kaydet butonu — MD3 Filled -->
+						<button
+							type="submit"
+							class="md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm"
+						>
+							<span class="material-icons-round text-[18px]">save</span>
+							Kaydet
+						</button>
+					</form>
+				</div>
+				<!-- SAĞ: Kayıtlı gruplar -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">workspaces</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Kayıtlı Gruplar</span>
+						if len(contactGroups) > 0 {
+							<span class="ml-auto text-[10px] font-bold text-white bg-green-600 rounded-full px-2 py-0.5">{ fmt.Sprintf("%d", len(contactGroups)) }</span>
+						}
+					</div>
+					<div class="p-6">
+						if len(contactGroups) == 0 {
+							<div class="flex flex-col items-center justify-center h-44 text-gray-300 gap-2">
+								<span class="material-icons-round text-[48px]">folder_open</span>
+								<p class="text-sm text-gray-400">Henüz kayıtlı grup yok</p>
+							</div>
+						} else {
+							<div class="space-y-2">
+								for _, cg := range contactGroups {
+									<div class="flex items-center justify-between px-4 py-3 rounded-2xl border border-gray-100 hover:border-green-200 hover:bg-green-50/40 transition-all group">
+										<div class="flex items-center gap-3 min-w-0">
+											<div class="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+												<span class="material-icons-round text-green-700 text-[18px]">workspaces</span>
+											</div>
+											<div class="min-w-0">
+												<p class="text-sm font-semibold text-gray-800 truncate">{ cg.Name }</p>
+												<p class="text-[11px] text-gray-400">{ fmt.Sprintf("%d WhatsApp grubu", len(cg.JIDs)) }</p>
+											</div>
+										</div>
+										<form method="POST" action="/groups/delete" class="shrink-0">
+											<input type="hidden" name="id" value={ fmt.Sprintf("%d", cg.ID) }/>
+											<button
+												type="submit"
+												onclick="return confirm('Bu grubu silmek istediğinize emin misiniz?')"
+												class="md-focus p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+											>
+												<span class="material-icons-round text-[18px]">delete_outline</span>
+											</button>
+										</form>
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			<!-- ALT: Mesaj Şablonları grid -->
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+				<!-- SOL: Yeni şablon yaz + kaydet -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">edit_note</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Mesaj Şablonu Oluştur</span>
+					</div>
+					<form method="POST" action="/msgtpl/create" class="p-6 space-y-4">
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Şablon İsmi</p>
+							<div class="relative">
+								<span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[18px]">label</span>
+								<input
+									type="text"
+									name="tpl_name"
+									placeholder="örn: Toplantı Hatırlatması"
+									required
+									class="w-full border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50"
+								/>
+							</div>
+						</div>
+						<div>
+							<div class="flex items-center justify-between mb-1.5">
+								<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Mesaj İçeriği</p>
+								<span id="tpl-char-count" class="text-[11px] text-gray-400">0 karakter</span>
+							</div>
+							<textarea
+								id="tpl-content"
+								name="tpl_content"
+								rows="5"
+								placeholder="Şablon olarak kaydetmek istediğiniz mesajı yazın..."
+								required
+								class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50 resize-none"
+								oninput="document.getElementById('tpl-char-count').textContent=this.value.length+' karakter'"
+							></textarea>
+						</div>
+						<button
+							type="submit"
+							class="md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm"
+						>
+							<span class="material-icons-round text-[18px]">save</span>
+							Kaydet
+						</button>
+					</form>
+				</div>
+				<!-- SAĞ: Kayıtlı şablonlar -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">library_books</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Kayıtlı Şablonlar</span>
+						if len(msgTpls) > 0 {
+							<span class="ml-auto text-[10px] font-bold text-white bg-green-600 rounded-full px-2 py-0.5">{ fmt.Sprintf("%d", len(msgTpls)) }</span>
+						}
+					</div>
+					<div class="p-4">
+						if len(msgTpls) == 0 {
+							<div class="flex flex-col items-center justify-center h-44 text-gray-300 gap-2">
+								<span class="material-icons-round text-[48px]">library_add</span>
+								<p class="text-sm text-gray-400">Henüz kayıtlı şablon yok</p>
+							</div>
+						} else {
+							<div class="space-y-2 max-h-80 overflow-y-auto pr-1">
+								for _, t := range msgTpls {
+									<div class="group rounded-2xl border border-gray-100 hover:border-green-300 hover:bg-green-50/30 transition-all overflow-hidden">
+										<button
+											type="button"
+											onclick={ copyTemplate(t.Content) }
+											class="w-full text-left px-4 py-3"
+										>
+											<div class="flex items-start justify-between gap-2">
+												<div class="min-w-0">
+													<p class="text-sm font-semibold text-gray-800">{ t.Name }</p>
+													<p class="text-xs text-gray-400 truncate mt-0.5">{ t.Content }</p>
+												</div>
+												<span class="material-icons-round text-gray-200 group-hover:text-green-500 text-[18px] shrink-0 transition-colors">content_copy</span>
+											</div>
+										</button>
+										<div class="border-t border-gray-100 px-4 py-1.5 flex items-center justify-between bg-gray-50/50">
+											<span class="text-[10px] text-gray-300">{ t.CreatedAt.Format("02.01.2006") }</span>
+											<form method="POST" action="/msgtpl/delete">
+												<input type="hidden" name="id" value={ fmt.Sprintf("%d", t.ID) }/>
+												<button type="submit" onclick="return confirm('Bu şablonu silmek istediğinize emin misiniz?')" class="md-focus p-1 text-gray-300 hover:text-red-500 rounded-lg transition-colors">
+													<span class="material-icons-round text-[15px]">delete_outline</span>
+												</button>
+											</form>
+										</div>
+									</div>
+								}
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			<!-- ALT: Medya Gönderimi — 2-col grid -->
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+				<!-- SOL: Resimli mesaj gönder (caption + dosya seç) -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">photo_library</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Resimli Mesaj Gönder</span>
+					</div>
+					<form method="POST" action="/send/image" class="p-6 space-y-4">
+						<!-- Hedef seçimi -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Hedef Grup</p>
+							<div class="relative">
+								<span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[18px]">group</span>
+								<select name="target" required class="w-full border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50 appearance-none">
+									<option value="">Grup seçin…</option>
+									if len(contactGroups) > 0 {
+										<optgroup label="Kayıtlı Gruplar">
+											for _, cg := range contactGroups {
+												<option value={ fmt.Sprintf("cg:%d", cg.ID) }>{ cg.Name }</option>
+											}
+										</optgroup>
+									}
+									if len(waGroups) > 0 {
+										<optgroup label="WhatsApp Grupları">
+											for _, g := range waGroups {
+												<option value={ g.JID }>{ g.Name }</option>
+											}
+										</optgroup>
+									}
+								</select>
+							</div>
+						</div>
+						<!-- Açıklama -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Açıklama (opsiyonel)</p>
+							<textarea
+								name="caption"
+								rows="3"
+								placeholder="Resmin altına yazılacak açıklama…"
+								class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50 resize-none"
+							></textarea>
+						</div>
+						<!-- Dosya seçimi — arşivden -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Arşivden Dosya Seç</p>
+							<input type="hidden" id="send-img-file-id" name="file_id" required/>
+							<div id="send-img-browser" class="border border-gray-200 rounded-2xl overflow-hidden">
+								<div id="send-img-breadcrumb" class="px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-1 text-xs text-gray-400">
+									<button type="button" onclick="browseFolder(0,'send-img')" class="flex items-center gap-1 hover:text-green-700 transition-colors">
+										<span class="material-icons-round text-[14px]">home</span>
+										Ana Klasör
+									</button>
+								</div>
+								<div id="send-img-list" class="max-h-52 overflow-y-auto p-2 space-y-1">
+									<!-- JS ile doldurulacak -->
+								</div>
+								<div id="send-img-selected" class="hidden px-4 py-2 bg-green-50 border-t border-green-200 text-xs text-green-700 flex items-center gap-2">
+									<span class="material-icons-round text-[14px]">check_circle</span>
+									<span id="send-img-selected-name"></span>
+								</div>
+							</div>
+						</div>
+						<button
+							type="submit"
+							class="md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm"
+						>
+							<span class="material-icons-round text-[18px]">send</span>
+							Resimli Mesaj Gönder
+						</button>
+					</form>
+				</div>
+				<!-- SAĞ: Sadece resim gönder (caption yok) -->
+				<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+					<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+						<span class="material-icons-round text-green-700 text-[18px]">image</span>
+						<span class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Sadece Resim Gönder</span>
+					</div>
+					<form method="POST" action="/send/image" class="p-6 space-y-4">
+						<!-- Hedef seçimi -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Hedef Grup</p>
+							<div class="relative">
+								<span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[18px]">group</span>
+								<select name="target" required class="w-full border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50 appearance-none">
+									<option value="">Grup seçin…</option>
+									if len(contactGroups) > 0 {
+										<optgroup label="Kayıtlı Gruplar">
+											for _, cg := range contactGroups {
+												<option value={ fmt.Sprintf("cg:%d", cg.ID) }>{ cg.Name }</option>
+											}
+										</optgroup>
+									}
+									if len(waGroups) > 0 {
+										<optgroup label="WhatsApp Grupları">
+											for _, g := range waGroups {
+												<option value={ g.JID }>{ g.Name }</option>
+											}
+										</optgroup>
+									}
+								</select>
+							</div>
+						</div>
+						<!-- Caption boş gönderilecek -->
+						<input type="hidden" name="caption" value=""/>
+						<!-- Dosya seçimi — arşivden -->
+						<div>
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Arşivden Dosya Seç</p>
+							<input type="hidden" id="send-only-file-id" name="file_id" required/>
+							<div id="send-only-browser" class="border border-gray-200 rounded-2xl overflow-hidden">
+								<div id="send-only-breadcrumb" class="px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center gap-1 text-xs text-gray-400">
+									<button type="button" onclick="browseFolder(0,'send-only')" class="flex items-center gap-1 hover:text-green-700 transition-colors">
+										<span class="material-icons-round text-[14px]">home</span>
+										Ana Klasör
+									</button>
+								</div>
+								<div id="send-only-list" class="max-h-52 overflow-y-auto p-2 space-y-1">
+									<!-- JS ile doldurulacak -->
+								</div>
+								<div id="send-only-selected" class="hidden px-4 py-2 bg-green-50 border-t border-green-200 text-xs text-green-700 flex items-center gap-2">
+									<span class="material-icons-round text-[14px]">check_circle</span>
+									<span id="send-only-selected-name"></span>
+								</div>
+							</div>
+						</div>
+						<button
+							type="submit"
+							class="md-focus w-full flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 active:scale-[.98] text-white font-semibold py-2.5 rounded-2xl transition-all text-sm"
+						>
+							<span class="material-icons-round text-[18px]">send</span>
+							Resim Gönder
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Medya tarayıcı JS -->
+		<script>
+		var _mediaData = null;
+		async function getMediaData() {
+			if (!_mediaData) {
+				const r = await fetch('/api/media-tree');
+				_mediaData = await r.json();
+			}
+			return _mediaData;
+		}
+		function mimeIcon(m) {
+			if (m.startsWith('image/')) return 'image';
+			if (m.startsWith('video/')) return 'videocam';
+			if (m.startsWith('audio/')) return 'audiotrack';
+			return 'insert_drive_file';
+		}
+		async function browseFolder(folderId, prefix) {
+			const data = await getMediaData();
+			const list = document.getElementById(prefix + '-list');
+			const bc = document.getElementById(prefix + '-breadcrumb');
+			list.innerHTML = '';
+
+			// breadcrumb
+			let crumbs = [{id:0, name:'Ana Klasör'}];
+			if (folderId > 0) {
+				let cur = folderId;
+				let chain = [];
+				while (cur > 0) {
+					const f = (data.folders||[]).find(x => x.id === cur);
+					if (!f) break;
+					chain.unshift(f);
+					cur = f.parent_id;
+				}
+				crumbs = crumbs.concat(chain);
+			}
+			bc.innerHTML = crumbs.map((c, i) => {
+				if (i === crumbs.length - 1) {
+					return `<span class="font-semibold text-green-700">${i===0?'<span class="material-icons-round text-[14px]">home</span> ':''}${c.name}</span>`;
+				}
+				return `<button type="button" onclick="browseFolder(${c.id},'${prefix}')" class="hover:text-green-700 transition-colors">${i===0?'<span class="material-icons-round text-[14px]">home</span> ':''}${c.name}</button><span class="material-icons-round text-[12px]">chevron_right</span>`;
+			}).join('');
+
+			// folders
+			const subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);
+			subFolders.forEach(f => {
+				const el = document.createElement('button');
+				el.type = 'button';
+				el.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-amber-50 text-left transition-colors';
+				el.innerHTML = `<span class="material-icons-round text-amber-500 text-[20px]">folder</span><span class="text-xs text-gray-700">${f.name}</span>`;
+				el.onclick = () => browseFolder(f.id, prefix);
+				list.appendChild(el);
+			});
+
+			// files (only images for sending)
+			const subFiles = (data.files||[]).filter(f => f.folder_id === folderId);
+			subFiles.forEach(f => {
+				const el = document.createElement('button');
+				el.type = 'button';
+				el.className = 'w-full flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 text-left transition-colors';
+				const icon = mimeIcon(f.mime_type);
+				const isImg = f.mime_type.startsWith('image/');
+				el.innerHTML = isImg
+					? `<img src="/${f.path}" class="w-8 h-8 rounded-lg object-cover shrink-0"/><span class="text-xs text-gray-700 truncate">${f.name}</span>`
+					: `<span class="material-icons-round text-gray-400 text-[20px]">${icon}</span><span class="text-xs text-gray-700 truncate">${f.name}</span>`;
+				el.onclick = () => selectFile(f, prefix);
+				list.appendChild(el);
+			});
+
+			if (subFolders.length === 0 && subFiles.length === 0) {
+				list.innerHTML = '<p class="text-xs text-gray-300 text-center py-4">Boş klasör</p>';
+			}
+		}
+		function selectFile(f, prefix) {
+			document.getElementById(prefix + '-file-id').value = f.id;
+			const sel = document.getElementById(prefix + '-selected');
+			sel.classList.remove('hidden');
+			document.getElementById(prefix + '-selected-name').textContent = f.name;
+		}
+		// Init browsers on page load
+		document.addEventListener('DOMContentLoaded', () => {
+			browseFolder(0, 'send-img');
+			browseFolder(0, 'send-only');
+		});
+		</script>
+	}
+}

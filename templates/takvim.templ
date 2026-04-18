@@ -1,0 +1,116 @@
+package templates
+
+import (
+	"fmt"
+	"time"
+)
+
+var trMonths = [12]string{
+	"Ocak", "Şubat", "Mart", "Nisan",
+	"Mayıs", "Haziran", "Temmuz", "Ağustos",
+	"Eylül", "Ekim", "Kasım", "Aralık",
+}
+
+var trDays = [7]string{"Pt", "Sa", "Çr", "Pe", "Cu", "Ct", "Pz"}
+
+templ Takvim(year int, counts map[string]int) {
+	@Layout("Takvim") {
+		<div class="space-y-6">
+			<!-- Başlık + yıl navigasyonu -->
+			<div class="flex items-center justify-between">
+				<h2 class="text-2xl font-bold text-gray-800">{ fmt.Sprintf("%d", year) } Takvimi</h2>
+				<div class="flex items-center gap-2">
+					<a
+						href={ templ.SafeURL(fmt.Sprintf("/takvim?yil=%d", year-1)) }
+						class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
+					>
+						<span class="material-icons-round text-[18px] text-gray-600">chevron_left</span>
+					</a>
+					<span class="text-sm font-semibold text-gray-700 w-12 text-center">{ fmt.Sprintf("%d", year) }</span>
+					<a
+						href={ templ.SafeURL(fmt.Sprintf("/takvim?yil=%d", year+1)) }
+						class="flex items-center justify-center w-9 h-9 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors"
+					>
+						<span class="material-icons-round text-[18px] text-gray-600">chevron_right</span>
+					</a>
+				</div>
+			</div>
+			<!-- 4-4-4 Grid -->
+			<div class="grid grid-cols-4 gap-4">
+				for m := 1; m <= 12; m++ {
+					@MonthCard(year, m, counts)
+				}
+			</div>
+		</div>
+	}
+}
+
+templ MonthCard(year, month int, counts map[string]int) {
+	{{
+		firstDay := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local)
+		// Pazartesi bazlı haftanın günü (0=Pt … 6=Pz)
+		startOffset := int(firstDay.Weekday()+6) % 7
+		daysInMonth := time.Date(year, time.Month(month+1), 0, 0, 0, 0, 0, time.Local).Day()
+		today := time.Now()
+		isCurrentMonth := today.Year() == year && int(today.Month()) == month
+	}}
+	<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+		<!-- Ay başlığı -->
+		<div class="flex items-center justify-between mb-3">
+			<span
+				class={
+					"text-sm font-bold",
+					templ.KV("text-green-700", isCurrentMonth),
+					templ.KV("text-gray-700", !isCurrentMonth),
+				}
+			>{ trMonths[month-1] }</span>
+			if isCurrentMonth {
+				<span class="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">Bu ay</span>
+			}
+		</div>
+		<!-- Gün başlıkları -->
+		<div class="grid grid-cols-7 mb-1">
+			for _, d := range trDays {
+				<div class="text-center text-[10px] font-semibold text-gray-400">{ d }</div>
+			}
+		</div>
+		<!-- Gün hücreleri -->
+		<div class="grid grid-cols-7 gap-y-0.5">
+			<!-- Boş offsetler -->
+			for i := 0; i < startOffset; i++ {
+				<div></div>
+			}
+			<!-- Günler -->
+			for day := 1; day <= daysInMonth; day++ {
+				{{
+					isToday := isCurrentMonth && today.Day() == day
+					isWeekend := (startOffset+day-1)%7 >= 5
+					dayKey := fmt.Sprintf("%04d-%02d-%02d", year, month, day)
+					msgCount := counts[dayKey]
+					hasMsgs := msgCount > 0
+				}}
+				<div
+					class={
+						"relative text-center text-xs py-0.5 rounded-md leading-5 w-full",
+						templ.KV("bg-green-600 text-white font-bold", isToday),
+						templ.KV("text-red-400 font-medium", !isToday && isWeekend),
+						templ.KV("text-gray-600", !isToday && !isWeekend),
+						templ.KV("hover:bg-green-50 cursor-default", !isToday),
+					}
+				>
+					{ fmt.Sprintf("%d", day) }
+					if hasMsgs {
+						<span
+							title={ fmt.Sprintf("%d mesaj planlı", msgCount) }
+							class={
+								"absolute -top-0.5 -right-0.5 flex items-center justify-center rounded-full text-[7px] font-bold leading-none min-w-[12px] h-[12px] px-0.5",
+								templ.KV("bg-white text-green-700 ring-1 ring-green-600", isToday),
+								templ.KV("bg-green-500 text-white", !isToday),
+							}
+						>{ fmt.Sprintf("%d", msgCount) }</span>
+					}
+				</div>
+			}
+		</div>
+	</div>
+}

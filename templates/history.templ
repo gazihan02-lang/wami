@@ -1,0 +1,249 @@
+package templates
+
+import (
+	"fmt"
+	"strings"
+	"wami/store"
+)
+
+func fileIcon(mimeType string) string {
+	if strings.HasPrefix(mimeType, "image/") {
+		return "image"
+	}
+	if strings.HasPrefix(mimeType, "video/") {
+		return "videocam"
+	}
+	if strings.HasPrefix(mimeType, "audio/") {
+		return "audiotrack"
+	}
+	return "insert_drive_file"
+}
+
+func fileIconColor(mimeType string) string {
+	if strings.HasPrefix(mimeType, "image/") {
+		return "text-blue-600 bg-blue-100"
+	}
+	if strings.HasPrefix(mimeType, "video/") {
+		return "text-purple-600 bg-purple-100"
+	}
+	if strings.HasPrefix(mimeType, "audio/") {
+		return "text-orange-600 bg-orange-100"
+	}
+	return "text-gray-600 bg-gray-100"
+}
+
+func humanSize(b int64) string {
+	const unit = 1024
+	if b < unit {
+		return fmt.Sprintf("%d B", b)
+	}
+	div, exp := int64(unit), 0
+	for n := b / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(b)/float64(div), "KMGTPE"[exp])
+}
+
+templ Archive(folderID int64, breadcrumb []store.MediaFolder, folders []store.MediaFolder, files []store.MediaFile) {
+	@Layout("Arşiv") {
+		<div class="space-y-5">
+			<!-- Header -->
+			<div class="flex items-center gap-3">
+				<div class="w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1">
+					<span class="material-icons-round text-white text-[20px]">cloud</span>
+				</div>
+				<div>
+					<h2 class="text-xl font-bold text-gray-800 leading-tight">Medya Arşivi</h2>
+					<p class="text-xs text-gray-400">Dosya ve klasörlerinizi yönetin</p>
+				</div>
+			</div>
+			<!-- Breadcrumb + Actions bar -->
+			<div class="bg-white rounded-3xl md-elevation-1 px-6 py-4">
+				<div class="flex items-center justify-between flex-wrap gap-3">
+					<!-- Breadcrumb -->
+					<nav class="flex items-center gap-1 text-sm min-w-0">
+						if folderID == 0 {
+							<span class="flex items-center gap-1 font-semibold text-green-700">
+								<span class="material-icons-round text-[18px]">home</span>
+								Ana Klasör
+							</span>
+						} else {
+							<a href="/history" class="flex items-center gap-1 text-gray-400 hover:text-green-700 transition-colors">
+								<span class="material-icons-round text-[18px]">home</span>
+								Ana Klasör
+							</a>
+							for _, bc := range breadcrumb {
+								<span class="material-icons-round text-gray-300 text-[16px]">chevron_right</span>
+								if bc.ID == folderID {
+									<span class="font-semibold text-green-700 truncate max-w-[150px]">{ bc.Name }</span>
+								} else {
+									<a href={ templ.SafeURL(fmt.Sprintf("/history?folder=%d", bc.ID)) } class="text-gray-400 hover:text-green-700 transition-colors truncate max-w-[150px]">{ bc.Name }</a>
+								}
+							}
+						}
+					</nav>
+					<!-- Action buttons -->
+					<div class="flex items-center gap-2">
+						<!-- Yeni klasör modal trigger -->
+						<button
+							type="button"
+							onclick="document.getElementById('folder-modal').classList.remove('hidden')"
+							class="md-focus flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 transition-all"
+						>
+							<span class="material-icons-round text-[16px]">create_new_folder</span>
+							Yeni Klasör
+						</button>
+						<!-- Dosya yükle -->
+						<button
+							type="button"
+							onclick="document.getElementById('upload-input').click()"
+							class="md-focus flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-semibold bg-green-700 hover:bg-green-800 text-white transition-all"
+						>
+							<span class="material-icons-round text-[16px]">upload_file</span>
+							Dosya Yükle
+						</button>
+						<form id="upload-form" method="POST" action="/archive/upload" enctype="multipart/form-data" class="hidden">
+							<input type="hidden" name="folder_id" value={ fmt.Sprintf("%d", folderID) }/>
+							<input
+								id="upload-input"
+								type="file"
+								name="file"
+								accept="image/*,video/*,audio/*"
+								onchange="document.getElementById('upload-form').submit()"
+							/>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Content grid -->
+			<div class="bg-white rounded-3xl md-elevation-1 overflow-hidden">
+				if len(folders) == 0 && len(files) == 0 {
+					<div class="flex flex-col items-center justify-center py-20 text-gray-300 gap-3">
+						<span class="material-icons-round text-[56px]">folder_open</span>
+						<p class="text-sm text-gray-400">Bu klasör boş</p>
+						<p class="text-xs text-gray-300">Klasör oluşturun veya dosya yükleyin</p>
+					</div>
+				} else {
+					<div class="p-5">
+						<!-- Folders -->
+						if len(folders) > 0 {
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Klasörler</p>
+							<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-5">
+								for _, f := range folders {
+									<div class="group relative">
+										<a
+											href={ templ.SafeURL(fmt.Sprintf("/history?folder=%d", f.ID)) }
+											class="flex flex-col items-center gap-2 p-4 rounded-2xl border border-gray-100 hover:border-green-300 hover:bg-green-50/40 transition-all"
+										>
+											<span class="material-icons-round text-[40px] text-amber-500">folder</span>
+											<span class="text-xs font-medium text-gray-700 text-center truncate w-full">{ f.Name }</span>
+										</a>
+										<!-- Delete button -->
+										<form method="POST" action="/archive/folder/delete" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+											<input type="hidden" name="id" value={ fmt.Sprintf("%d", f.ID) }/>
+											<button
+												type="submit"
+												onclick="return confirm('Bu klasör ve içindekiler silinecek. Emin misiniz?')"
+												class="p-1 bg-white/90 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all md-elevation-1"
+											>
+												<span class="material-icons-round text-[15px]">delete_outline</span>
+											</button>
+										</form>
+									</div>
+								}
+							</div>
+						}
+						<!-- Files -->
+						if len(files) > 0 {
+							<p class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Dosyalar</p>
+							<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+								for _, f := range files {
+									<div class="group relative rounded-2xl border border-gray-100 hover:border-green-300 hover:bg-green-50/30 transition-all overflow-hidden">
+										<!-- Preview / icon -->
+										<a href={ templ.SafeURL("/" + f.Path) } target="_blank" class="block">
+											if strings.HasPrefix(f.MimeType, "image/") {
+												<div class="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+													<img src={ "/" + f.Path } alt={ f.Name } class="w-full h-full object-cover"/>
+												</div>
+											} else if strings.HasPrefix(f.MimeType, "video/") {
+												<div class="aspect-square bg-gray-900 flex items-center justify-center relative">
+													<video src={ "/" + f.Path } class="w-full h-full object-cover"></video>
+													<div class="absolute inset-0 flex items-center justify-center">
+														<span class="material-icons-round text-white/80 text-[40px] drop-shadow-lg">play_circle</span>
+													</div>
+												</div>
+											} else if strings.HasPrefix(f.MimeType, "audio/") {
+												<div class="aspect-square bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
+													<span class="material-icons-round text-orange-400 text-[48px]">audiotrack</span>
+												</div>
+											} else {
+												<div class="aspect-square bg-gray-50 flex items-center justify-center">
+													<span class={ "material-icons-round text-[48px]", fileIconColor(f.MimeType) }>{ fileIcon(f.MimeType) }</span>
+												</div>
+											}
+										</a>
+										<!-- Info bar -->
+										<div class="px-3 py-2 border-t border-gray-100">
+											<p class="text-xs font-medium text-gray-700 truncate" title={ f.Name }>{ f.Name }</p>
+											<p class="text-[10px] text-gray-300 mt-0.5">{ humanSize(f.Size) }</p>
+										</div>
+										<!-- Delete button -->
+										<form method="POST" action="/archive/file/delete" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+											<input type="hidden" name="id" value={ fmt.Sprintf("%d", f.ID) }/>
+											<button
+												type="submit"
+												onclick="return confirm('Bu dosyayı silmek istediğinize emin misiniz?')"
+												class="p-1 bg-white/90 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all md-elevation-1"
+											>
+												<span class="material-icons-round text-[15px]">delete_outline</span>
+											</button>
+										</form>
+									</div>
+								}
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+		<!-- Yeni Klasör Modal -->
+		<div id="folder-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onclick="if(event.target===this)this.classList.add('hidden')">
+			<div class="bg-white rounded-3xl md-elevation-3 w-full max-w-sm mx-4 overflow-hidden">
+				<div class="px-6 pt-5 pb-3 border-b border-gray-100 flex items-center gap-2">
+					<span class="material-icons-round text-amber-500 text-[20px]">create_new_folder</span>
+					<span class="text-sm font-semibold text-gray-700">Yeni Klasör Oluştur</span>
+				</div>
+				<form method="POST" action="/archive/folder/create" class="p-6 space-y-4">
+					<input type="hidden" name="parent_id" value={ fmt.Sprintf("%d", folderID) }/>
+					<div class="relative">
+						<span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-icons-round text-gray-300 text-[18px]">folder</span>
+						<input
+							type="text"
+							name="folder_name"
+							placeholder="Klasör adı"
+							required
+							class="w-full border border-gray-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-gray-50/50"
+						/>
+					</div>
+					<div class="flex gap-2">
+						<button
+							type="button"
+							onclick="document.getElementById('folder-modal').classList.add('hidden')"
+							class="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-all"
+						>
+							İptal
+						</button>
+						<button
+							type="submit"
+							class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-2xl text-sm font-semibold text-white bg-green-700 hover:bg-green-800 transition-all"
+						>
+							<span class="material-icons-round text-[16px]">check</span>
+							Oluştur
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	}
+}

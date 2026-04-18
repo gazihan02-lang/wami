@@ -1,0 +1,25 @@
+# Binaries
+wami-bin
+*.exe
+
+# SQLite databases
+bot.db
+wa.db
+wa.db-shm
+wa.db-wal
+
+# Uploads
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temp
+/tmp/
