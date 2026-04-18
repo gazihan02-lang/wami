@@ -136,7 +136,7 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
 										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
 										<td class="px-6 py-3.5">
-											@msgTypeBadge(msg.MsgType)
+											@msgTypeTooltip(msg)
 										</td>
 										<td class="px-6 py-3.5 text-gray-700 max-w-[240px]">
 											<span class="block truncate" title={ msg.Message }>
@@ -489,6 +489,31 @@ templ msgTypeBadge(t string) {
 				<span class="material-icons-round text-[13px]">chat</span>Mesaj
 			</span>
 	}
+}
+
+templ msgTypeTooltip(msg store.ScheduledMessage) {
+	<div class="relative group/tip inline-flex">
+		@msgTypeBadge(msg.MsgType)
+		<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-50">
+			<div class="bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]">
+				switch msg.MsgType {
+					case "image", "image_only":
+						if msg.FilePath != "" {
+							<img src={ "/uploads/" + msg.FilePath } alt="Önizleme" class="w-full max-h-40 object-contain rounded-lg"/>
+						} else {
+							<p class="text-xs text-gray-300 text-center">Dosya bulunamadı</p>
+						}
+					default:
+						if msg.Message != "" {
+							<p class="text-xs leading-relaxed break-words">{ msg.Message }</p>
+						} else {
+							<p class="text-xs text-gray-300 text-center italic">Boş mesaj</p>
+						}
+				}
+				<div class="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mt-1"></div>
+			</div>
+		</div>
+	</div>
 }
 
 templ repeatBadge(r string) {

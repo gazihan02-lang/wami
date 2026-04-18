@@ -189,8 +189,11 @@ func (d *DB) DeleteScheduledMessage(id int64) error {
 func (d *DB) GetAllScheduled() ([]ScheduledMessage, error) {
 	rows, err := d.db.Query(
 		`SELECT sm.id, sm.phone, sm.message, sm.scheduled_at, sm.sent, sm.created_at,
-		        sm.msg_type, sm.file_id, sm.repeat_rule
-		 FROM scheduled_messages sm ORDER BY sm.scheduled_at DESC LIMIT 100`,
+		        sm.msg_type, sm.file_id, sm.repeat_rule,
+		        COALESCE(mf.path,''), COALESCE(mf.mime_type,'')
+		 FROM scheduled_messages sm
+		 LEFT JOIN media_files mf ON mf.id = sm.file_id
+		 ORDER BY sm.scheduled_at DESC LIMIT 100`,
 	)
 	if err != nil {
 		return nil, err
@@ -201,7 +204,7 @@ func (d *DB) GetAllScheduled() ([]ScheduledMessage, error) {
 	for rows.Next() {
 		var m ScheduledMessage
 		var scheduledStr, createdStr string
-		if err := rows.Scan(&m.ID, &m.Phone, &m.Message, &scheduledStr, &m.Sent, &createdStr, &m.MsgType, &m.FileID, &m.RepeatRule); err != nil {
+		if err := rows.Scan(&m.ID, &m.Phone, &m.Message, &scheduledStr, &m.Sent, &createdStr, &m.MsgType, &m.FileID, &m.RepeatRule, &m.FilePath, &m.FileMime); err != nil {
 			return nil, err
 		}
 		m.ScheduledAt, _ = time.Parse(time.RFC3339, scheduledStr)
