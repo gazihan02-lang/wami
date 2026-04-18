@@ -97,7 +97,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					return templ_7745c5c3_Err
 				}
 				for _, msg := range scheduled {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<tr class=\"border-t border-gray-100 hover:bg-green-50/40 transition-colors relative hover:z-[100]\"><td class=\"px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<tr class=\"border-t border-gray-100 hover:bg-green-50/40 transition-colors\"><td class=\"px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -272,7 +272,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div><!-- Zamanlama --><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-3\">Zamanlama</label><div class=\"grid grid-cols-5 gap-3\"><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tarih</label> <input type=\"date\" name=\"scheduled_date\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-1\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Saat</label> <input type=\"time\" name=\"scheduled_time\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tekrar</label> <select name=\"repeat_rule\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"><option value=\"\">Tek Sefer</option> <option value=\"daily\">Her Gün</option> <option value=\"weekly\">Her Hafta</option> <option value=\"monthly\">Her Ay</option></select></div></div></div></div><!-- Footer --><div class=\"px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex justify-end gap-3 shrink-0\"><button type=\"button\" onclick=\"closeScheduleModal()\" class=\"px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors\">İptal</button> <button type=\"submit\" class=\"px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1\"><span class=\"material-icons-round text-[16px]\">schedule_send</span> Planla</button></div></form></div></div><!-- Schedule Modal JS --> <style>\n\t\t\t@keyframes modal-in {\n\t\t\t\tfrom { opacity: 0; transform: translateY(24px) scale(0.97); }\n\t\t\t\tto { opacity: 1; transform: translateY(0) scale(1); }\n\t\t\t}\n\t\t\t.animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }\n\t\t</style> <script>\n\t\t/* --- Modal open/close --- */\n\t\tfunction openScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.remove('hidden');\n\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\tinitBrowsers();\n\t\t}\n\t\tfunction closeScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.add('hidden');\n\t\t\tdocument.body.style.overflow = '';\n\t\t}\n\t\tdocument.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });\n\n\t\t/* --- Tab switching --- */\n\t\tlet currentTab = 'text';\n\t\tfunction switchTab(tab) {\n\t\t\tcurrentTab = tab;\n\t\t\tdocument.getElementById('modal-msg-type').value = tab;\n\t\t\t// Update tab buttons\n\t\t\tdocument.querySelectorAll('.tab-btn').forEach(btn => {\n\t\t\t\tbtn.classList.remove('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t\tbtn.classList.add('border-transparent','text-gray-400');\n\t\t\t});\n\t\t\tconst active = document.getElementById('tab-btn-' + tab);\n\t\t\tactive.classList.remove('border-transparent','text-gray-400');\n\t\t\tactive.classList.add('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t// Show/hide panels\n\t\t\tdocument.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));\n\t\t\tdocument.getElementById('tab-' + tab).classList.remove('hidden');\n\t\t\t// Sync file_id from the active browser\n\t\t\tsyncFileId();\n\t\t}\n\t\tfunction syncFileId() {\n\t\t\tlet fid = '';\n\t\t\tif (currentTab === 'image') {\n\t\t\t\tfid = document.getElementById('modal-img-file-id')?.value || '';\n\t\t\t} else if (currentTab === 'image_only') {\n\t\t\t\tfid = document.getElementById('modal-only-file-id')?.value || '';\n\t\t\t}\n\t\t\tdocument.getElementById('modal-file-id').value = fid;\n\t\t}\n\n\t\t/* --- Media browser --- */\n\t\tlet _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px] text-gray-300\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-left transition-colors group';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[22px] group-hover:text-amber-600 transition-colors\">folder</span><span class=\"text-xs text-gray-700 font-medium\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-green-50 text-left transition-colors group';\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-gray-200\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[22px]\">${mimeIcon(f.mime_type)}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-6\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tconst nameEl = document.getElementById(prefix + '-selected-name');\n\t\t\tnameEl.textContent = f.name;\n\t\t\tconst thumbEl = document.getElementById(prefix + '-selected-thumb');\n\t\t\tif (f.mime_type.startsWith('image/')) {\n\t\t\t\tthumbEl.src = '/' + f.path;\n\t\t\t\tthumbEl.classList.remove('hidden');\n\t\t\t} else {\n\t\t\t\tthumbEl.classList.add('hidden');\n\t\t\t}\n\t\t\t// Sync to main hidden input\n\t\t\tsyncFileId();\n\t\t}\n\t\tlet _browsersInitialized = false;\n\t\tfunction initBrowsers() {\n\t\t\tif (_browsersInitialized) return;\n\t\t\t_browsersInitialized = true;\n\t\t\tbrowseFolder(0, 'modal-img');\n\t\t\tbrowseFolder(0, 'modal-only');\n\t\t}\n\t\t/* --- Form submit: sync message from active tab --- */\n\t\tdocument.getElementById('schedule-form').addEventListener('submit', function() {\n\t\t\tlet msg = '';\n\t\t\tif (currentTab === 'text') {\n\t\t\t\tmsg = document.getElementById('modal-message').value;\n\t\t\t} else if (currentTab === 'image') {\n\t\t\t\tmsg = document.getElementById('modal-caption').value;\n\t\t\t}\n\t\t\tdocument.getElementById('modal-message-hidden').value = msg;\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div><!-- Zamanlama --><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-3\">Zamanlama</label><div class=\"grid grid-cols-5 gap-3\"><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tarih</label> <input type=\"date\" name=\"scheduled_date\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-1\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Saat</label> <input type=\"time\" name=\"scheduled_time\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tekrar</label> <select name=\"repeat_rule\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"><option value=\"\">Tek Sefer</option> <option value=\"daily\">Her Gün</option> <option value=\"weekly\">Her Hafta</option> <option value=\"monthly\">Her Ay</option></select></div></div></div></div><!-- Footer --><div class=\"px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex justify-end gap-3 shrink-0\"><button type=\"button\" onclick=\"closeScheduleModal()\" class=\"px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors\">İptal</button> <button type=\"submit\" class=\"px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1\"><span class=\"material-icons-round text-[16px]\">schedule_send</span> Planla</button></div></form></div></div><!-- Schedule Modal JS --> <style>\n\t\t\t@keyframes modal-in {\n\t\t\t\tfrom { opacity: 0; transform: translateY(24px) scale(0.97); }\n\t\t\t\tto { opacity: 1; transform: translateY(0) scale(1); }\n\t\t\t}\n\t\t\t.animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }\n\t\t</style> <script>\n\t\t/* --- Modal open/close --- */\n\t\tfunction openScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.remove('hidden');\n\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\tinitBrowsers();\n\t\t}\n\t\tfunction closeScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.add('hidden');\n\t\t\tdocument.body.style.overflow = '';\n\t\t}\n\t\tdocument.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });\n\n\t\t/* --- Tab switching --- */\n\t\tlet currentTab = 'text';\n\t\tfunction switchTab(tab) {\n\t\t\tcurrentTab = tab;\n\t\t\tdocument.getElementById('modal-msg-type').value = tab;\n\t\t\t// Update tab buttons\n\t\t\tdocument.querySelectorAll('.tab-btn').forEach(btn => {\n\t\t\t\tbtn.classList.remove('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t\tbtn.classList.add('border-transparent','text-gray-400');\n\t\t\t});\n\t\t\tconst active = document.getElementById('tab-btn-' + tab);\n\t\t\tactive.classList.remove('border-transparent','text-gray-400');\n\t\t\tactive.classList.add('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t// Show/hide panels\n\t\t\tdocument.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));\n\t\t\tdocument.getElementById('tab-' + tab).classList.remove('hidden');\n\t\t\t// Sync file_id from the active browser\n\t\t\tsyncFileId();\n\t\t}\n\t\tfunction syncFileId() {\n\t\t\tlet fid = '';\n\t\t\tif (currentTab === 'image') {\n\t\t\t\tfid = document.getElementById('modal-img-file-id')?.value || '';\n\t\t\t} else if (currentTab === 'image_only') {\n\t\t\t\tfid = document.getElementById('modal-only-file-id')?.value || '';\n\t\t\t}\n\t\t\tdocument.getElementById('modal-file-id').value = fid;\n\t\t}\n\n\t\t/* --- Media browser --- */\n\t\tlet _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px] text-gray-300\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-left transition-colors group';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[22px] group-hover:text-amber-600 transition-colors\">folder</span><span class=\"text-xs text-gray-700 font-medium\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-green-50 text-left transition-colors group';\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-gray-200\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[22px]\">${mimeIcon(f.mime_type)}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-6\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tconst nameEl = document.getElementById(prefix + '-selected-name');\n\t\t\tnameEl.textContent = f.name;\n\t\t\tconst thumbEl = document.getElementById(prefix + '-selected-thumb');\n\t\t\tif (f.mime_type.startsWith('image/')) {\n\t\t\t\tthumbEl.src = '/' + f.path;\n\t\t\t\tthumbEl.classList.remove('hidden');\n\t\t\t} else {\n\t\t\t\tthumbEl.classList.add('hidden');\n\t\t\t}\n\t\t\t// Sync to main hidden input\n\t\t\tsyncFileId();\n\t\t}\n\t\tlet _browsersInitialized = false;\n\t\tfunction initBrowsers() {\n\t\t\tif (_browsersInitialized) return;\n\t\t\t_browsersInitialized = true;\n\t\t\tbrowseFolder(0, 'modal-img');\n\t\t\tbrowseFolder(0, 'modal-only');\n\t\t}\n\t\t/* --- Form submit: sync message from active tab --- */\n\t\tdocument.getElementById('schedule-form').addEventListener('submit', function() {\n\t\t\tlet msg = '';\n\t\t\tif (currentTab === 'text') {\n\t\t\t\tmsg = document.getElementById('modal-message').value;\n\t\t\t} else if (currentTab === 'image') {\n\t\t\t\tmsg = document.getElementById('modal-caption').value;\n\t\t\t}\n\t\t\tdocument.getElementById('modal-message-hidden').value = msg;\n\t\t});\n\n\t\t/* --- Fixed tooltip for Tür column --- */\n\t\t(function(){\n\t\t\tconst tip = document.createElement('div');\n\t\t\ttip.id = 'fixed-tip';\n\t\t\ttip.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;display:none;';\n\t\t\ttip.innerHTML = '<div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\"><div id=\"fixed-tip-body\"></div><div style=\"position:absolute;top:100%;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#1f2937;rotate:45deg;margin-top:-4px;\"></div></div>';\n\t\t\tdocument.body.appendChild(tip);\n\t\t\tconst body = document.getElementById('fixed-tip-body');\n\n\t\t\tdocument.addEventListener('mouseenter', function(e){\n\t\t\t\tconst trigger = e.target.closest('.tip-trigger');\n\t\t\t\tif (!trigger) return;\n\t\t\t\tconst img = trigger.dataset.tipImg;\n\t\t\t\tconst txt = trigger.dataset.tipText;\n\t\t\t\tif (img) {\n\t\t\t\t\tbody.innerHTML = '<img src=\"'+img+'\" alt=\"Önizleme\" style=\"max-height:160px;width:100%;object-fit:contain;border-radius:8px;\">';\n\t\t\t\t} else if (txt) {\n\t\t\t\t\tbody.innerHTML = '<p style=\"font-size:12px;line-height:1.5;word-break:break-word;\">'+txt.replace(/</g,'&lt;')+'</p>';\n\t\t\t\t} else {\n\t\t\t\t\tbody.innerHTML = '<p style=\"font-size:12px;color:#d1d5db;text-align:center;font-style:italic;\">—</p>';\n\t\t\t\t}\n\t\t\t\tconst rect = trigger.getBoundingClientRect();\n\t\t\t\ttip.style.display = 'block';\n\t\t\t\tconst tipW = tip.offsetWidth;\n\t\t\t\ttip.style.left = Math.max(8, rect.left + rect.width/2 - tipW/2) + 'px';\n\t\t\t\ttip.style.top = (rect.top - tip.offsetHeight - 8) + 'px';\n\t\t\t}, true);\n\n\t\t\tdocument.addEventListener('mouseleave', function(e){\n\t\t\t\tif (e.target.closest('.tip-trigger')) tip.style.display = 'none';\n\t\t\t}, true);\n\t\t})();\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -314,7 +314,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-file-id")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 457, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 490, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -327,7 +327,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-breadcrumb")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 460, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 493, Col: 35}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -340,7 +340,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-list")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 462, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 495, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -353,7 +353,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 467, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 500, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -366,7 +366,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-thumb")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 468, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 501, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -379,7 +379,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-name")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 470, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 503, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -456,7 +456,48 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"relative group/tip inline-flex\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"inline-flex tip-trigger\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if msg.MsgType == "image" || msg.MsgType == "image_only" {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, " data-tip-img=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var20 string
+			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs("/" + msg.FilePath)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 528, Col: 36}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, " data-tip-text=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var21 string
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 530, Col: 30}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, ">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -464,63 +505,7 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-[9999]\"><div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		switch msg.MsgType {
-		case "image", "image_only":
-			if msg.FilePath != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<img src=\"")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var20 string
-				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs("/" + msg.FilePath)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 500, Col: 36}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "\" alt=\"Önizleme\" class=\"w-full max-h-40 object-contain rounded-lg\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<p class=\"text-xs text-gray-300 text-center\">Dosya bulunamadı</p>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		default:
-			if msg.Message != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<p class=\"text-xs leading-relaxed break-words\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 506, Col: 67}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</p>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<p class=\"text-xs text-gray-300 text-center italic\">Boş mesaj</p>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<div class=\"absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mt-1\"></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -551,22 +536,22 @@ func repeatBadge(r string) templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		switch r {
 		case "daily":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Gün</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Gün</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "weekly":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Hafta</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Hafta</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "monthly":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Ay</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Ay</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<span class=\"text-xs text-gray-300\">—</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span class=\"text-xs text-gray-300\">—</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

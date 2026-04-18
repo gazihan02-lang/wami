@@ -136,7 +136,7 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 							</thead>
 							<tbody>
 								for _, msg := range scheduled {
-									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors relative hover:z-[100]">
+									<tr class="border-t border-gray-100 hover:bg-green-50/40 transition-colors">
 										<td class="px-6 py-3.5 text-gray-500 whitespace-nowrap text-xs">{ msg.ScheduledAt.Local().Format("02.01.2006 · 15:04") }</td>
 										<td class="px-6 py-3.5 text-gray-600 text-xs">
 											<span class="inline-flex items-center gap-1">
@@ -447,6 +447,39 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 			}
 			document.getElementById('modal-message-hidden').value = msg;
 		});
+
+		/* --- Fixed tooltip for Tür column --- */
+		(function(){
+			const tip = document.createElement('div');
+			tip.id = 'fixed-tip';
+			tip.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;display:none;';
+			tip.innerHTML = '<div class="bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]"><div id="fixed-tip-body"></div><div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#1f2937;rotate:45deg;margin-top:-4px;"></div></div>';
+			document.body.appendChild(tip);
+			const body = document.getElementById('fixed-tip-body');
+
+			document.addEventListener('mouseenter', function(e){
+				const trigger = e.target.closest('.tip-trigger');
+				if (!trigger) return;
+				const img = trigger.dataset.tipImg;
+				const txt = trigger.dataset.tipText;
+				if (img) {
+					body.innerHTML = '<img src="'+img+'" alt="Önizleme" style="max-height:160px;width:100%;object-fit:contain;border-radius:8px;">';
+				} else if (txt) {
+					body.innerHTML = '<p style="font-size:12px;line-height:1.5;word-break:break-word;">'+txt.replace(/</g,'&lt;')+'</p>';
+				} else {
+					body.innerHTML = '<p style="font-size:12px;color:#d1d5db;text-align:center;font-style:italic;">—</p>';
+				}
+				const rect = trigger.getBoundingClientRect();
+				tip.style.display = 'block';
+				const tipW = tip.offsetWidth;
+				tip.style.left = Math.max(8, rect.left + rect.width/2 - tipW/2) + 'px';
+				tip.style.top = (rect.top - tip.offsetHeight - 8) + 'px';
+			}, true);
+
+			document.addEventListener('mouseleave', function(e){
+				if (e.target.closest('.tip-trigger')) tip.style.display = 'none';
+			}, true);
+		})();
 		</script>
 	}
 }
@@ -490,27 +523,14 @@ templ msgTypeBadge(t string) {
 }
 
 templ msgTypeTooltip(msg store.ScheduledMessage) {
-	<div class="relative group/tip inline-flex">
+	<div class="inline-flex tip-trigger"
+		if msg.MsgType == "image" || msg.MsgType == "image_only" {
+			data-tip-img={ "/" + msg.FilePath }
+		} else {
+			data-tip-text={ msg.Message }
+		}
+	>
 		@msgTypeBadge(msg.MsgType)
-		<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-[9999]">
-			<div class="bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]">
-				switch msg.MsgType {
-					case "image", "image_only":
-						if msg.FilePath != "" {
-							<img src={ "/" + msg.FilePath } alt="Önizleme" class="w-full max-h-40 object-contain rounded-lg"/>
-						} else {
-							<p class="text-xs text-gray-300 text-center">Dosya bulunamadı</p>
-						}
-					default:
-						if msg.Message != "" {
-							<p class="text-xs leading-relaxed break-words">{ msg.Message }</p>
-						} else {
-							<p class="text-xs text-gray-300 text-center italic">Boş mesaj</p>
-						}
-				}
-				<div class="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mt-1"></div>
-			</div>
-		</div>
 	</div>
 }
 
