@@ -209,91 +209,39 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if len(waGroups) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<optgroup label=\"WhatsApp Grupları\">")
+			for _, cg := range contactGroups {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<option value=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				for _, g := range waGroups {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<option value=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var8 string
-					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(g.JID)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 229, Col: 32}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\">")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var9 string
-					templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(g.Name)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 229, Col: 43}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</option>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
+				var templ_7745c5c3_Var8 string
+				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cg:%d", cg.ID))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 227, Col: 52}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</optgroup> ")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var9 string
+				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 227, Col: 64}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</option>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			if len(contactGroups) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<optgroup label=\"Kişi Grupları\">")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				for _, cg := range contactGroups {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<option value=\"")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var10 string
-					templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cg:%d", cg.ID))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 236, Col: 54}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\">")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var11 string
-					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 236, Col: 66}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "</option>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</optgroup>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</select></div><!-- TAB: text --><div id=\"tab-text\" class=\"tab-panel space-y-4\"><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Mesaj</label> <textarea id=\"modal-message\" rows=\"4\" placeholder=\"Mesajınızı yazın...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all\"></textarea></div></div><!-- TAB: image (resim + mesaj) --><div id=\"tab-image\" class=\"tab-panel hidden space-y-4\"><!-- Arşiv tarayıcı -->")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</select></div><!-- TAB: text --><div id=\"tab-text\" class=\"tab-panel space-y-4\"><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Mesaj</label> <textarea id=\"modal-message\" rows=\"4\" placeholder=\"Mesajınızı yazın...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all\"></textarea></div></div><!-- TAB: image (resim + mesaj) --><div id=\"tab-image\" class=\"tab-panel hidden space-y-4\"><!-- Arşiv tarayıcı -->")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -301,7 +249,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Mesaj (opsiyonel)</label> <textarea id=\"modal-caption\" rows=\"3\" placeholder=\"Resim açıklaması (isteğe bağlı)...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all\"></textarea></div></div><!-- TAB: image_only --><div id=\"tab-image_only\" class=\"tab-panel hidden space-y-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Mesaj (opsiyonel)</label> <textarea id=\"modal-caption\" rows=\"3\" placeholder=\"Resim açıklaması (isteğe bağlı)...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all\"></textarea></div></div><!-- TAB: image_only --><div id=\"tab-image_only\" class=\"tab-panel hidden space-y-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -309,7 +257,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</div><!-- Zamanlama --><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-3\">Zamanlama</label><div class=\"grid grid-cols-5 gap-3\"><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tarih</label> <input type=\"date\" name=\"scheduled_date\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-1\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Saat</label> <input type=\"time\" name=\"scheduled_time\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tekrar</label> <select name=\"repeat_rule\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"><option value=\"\">Tek Sefer</option> <option value=\"daily\">Her Gün</option> <option value=\"weekly\">Her Hafta</option> <option value=\"monthly\">Her Ay</option></select></div></div></div></div><!-- Footer --><div class=\"px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex justify-end gap-3 shrink-0\"><button type=\"button\" onclick=\"closeScheduleModal()\" class=\"px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors\">İptal</button> <button type=\"submit\" class=\"px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1\"><span class=\"material-icons-round text-[16px]\">schedule_send</span> Planla</button></div></form></div></div><!-- Schedule Modal JS --> <style>\n\t\t\t@keyframes modal-in {\n\t\t\t\tfrom { opacity: 0; transform: translateY(24px) scale(0.97); }\n\t\t\t\tto { opacity: 1; transform: translateY(0) scale(1); }\n\t\t\t}\n\t\t\t.animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }\n\t\t</style> <script>\n\t\t/* --- Modal open/close --- */\n\t\tfunction openScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.remove('hidden');\n\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\tinitBrowsers();\n\t\t}\n\t\tfunction closeScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.add('hidden');\n\t\t\tdocument.body.style.overflow = '';\n\t\t}\n\t\tdocument.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });\n\n\t\t/* --- Tab switching --- */\n\t\tlet currentTab = 'text';\n\t\tfunction switchTab(tab) {\n\t\t\tcurrentTab = tab;\n\t\t\tdocument.getElementById('modal-msg-type').value = tab;\n\t\t\t// Update tab buttons\n\t\t\tdocument.querySelectorAll('.tab-btn').forEach(btn => {\n\t\t\t\tbtn.classList.remove('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t\tbtn.classList.add('border-transparent','text-gray-400');\n\t\t\t});\n\t\t\tconst active = document.getElementById('tab-btn-' + tab);\n\t\t\tactive.classList.remove('border-transparent','text-gray-400');\n\t\t\tactive.classList.add('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t// Show/hide panels\n\t\t\tdocument.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));\n\t\t\tdocument.getElementById('tab-' + tab).classList.remove('hidden');\n\t\t\t// Sync file_id from the active browser\n\t\t\tsyncFileId();\n\t\t}\n\t\tfunction syncFileId() {\n\t\t\tlet fid = '';\n\t\t\tif (currentTab === 'image') {\n\t\t\t\tfid = document.getElementById('modal-img-file-id')?.value || '';\n\t\t\t} else if (currentTab === 'image_only') {\n\t\t\t\tfid = document.getElementById('modal-only-file-id')?.value || '';\n\t\t\t}\n\t\t\tdocument.getElementById('modal-file-id').value = fid;\n\t\t}\n\n\t\t/* --- Media browser --- */\n\t\tlet _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px] text-gray-300\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-left transition-colors group';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[22px] group-hover:text-amber-600 transition-colors\">folder</span><span class=\"text-xs text-gray-700 font-medium\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-green-50 text-left transition-colors group';\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-gray-200\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[22px]\">${mimeIcon(f.mime_type)}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-6\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tconst nameEl = document.getElementById(prefix + '-selected-name');\n\t\t\tnameEl.textContent = f.name;\n\t\t\tconst thumbEl = document.getElementById(prefix + '-selected-thumb');\n\t\t\tif (f.mime_type.startsWith('image/')) {\n\t\t\t\tthumbEl.src = '/' + f.path;\n\t\t\t\tthumbEl.classList.remove('hidden');\n\t\t\t} else {\n\t\t\t\tthumbEl.classList.add('hidden');\n\t\t\t}\n\t\t\t// Sync to main hidden input\n\t\t\tsyncFileId();\n\t\t}\n\t\tlet _browsersInitialized = false;\n\t\tfunction initBrowsers() {\n\t\t\tif (_browsersInitialized) return;\n\t\t\t_browsersInitialized = true;\n\t\t\tbrowseFolder(0, 'modal-img');\n\t\t\tbrowseFolder(0, 'modal-only');\n\t\t}\n\t\t/* --- Form submit: sync message from active tab --- */\n\t\tdocument.getElementById('schedule-form').addEventListener('submit', function() {\n\t\t\tlet msg = '';\n\t\t\tif (currentTab === 'text') {\n\t\t\t\tmsg = document.getElementById('modal-message').value;\n\t\t\t} else if (currentTab === 'image') {\n\t\t\t\tmsg = document.getElementById('modal-caption').value;\n\t\t\t}\n\t\t\tdocument.getElementById('modal-message-hidden').value = msg;\n\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div><!-- Zamanlama --><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-3\">Zamanlama</label><div class=\"grid grid-cols-5 gap-3\"><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tarih</label> <input type=\"date\" name=\"scheduled_date\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-1\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Saat</label> <input type=\"time\" name=\"scheduled_time\" required class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div class=\"col-span-2\"><label class=\"text-[10px] font-medium text-gray-400 block mb-1\">Tekrar</label> <select name=\"repeat_rule\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"><option value=\"\">Tek Sefer</option> <option value=\"daily\">Her Gün</option> <option value=\"weekly\">Her Hafta</option> <option value=\"monthly\">Her Ay</option></select></div></div></div></div><!-- Footer --><div class=\"px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex justify-end gap-3 shrink-0\"><button type=\"button\" onclick=\"closeScheduleModal()\" class=\"px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors\">İptal</button> <button type=\"submit\" class=\"px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1\"><span class=\"material-icons-round text-[16px]\">schedule_send</span> Planla</button></div></form></div></div><!-- Schedule Modal JS --> <style>\n\t\t\t@keyframes modal-in {\n\t\t\t\tfrom { opacity: 0; transform: translateY(24px) scale(0.97); }\n\t\t\t\tto { opacity: 1; transform: translateY(0) scale(1); }\n\t\t\t}\n\t\t\t.animate-modal-in { animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1); }\n\t\t</style> <script>\n\t\t/* --- Modal open/close --- */\n\t\tfunction openScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.remove('hidden');\n\t\t\tdocument.body.style.overflow = 'hidden';\n\t\t\tinitBrowsers();\n\t\t}\n\t\tfunction closeScheduleModal() {\n\t\t\tdocument.getElementById('schedule-modal').classList.add('hidden');\n\t\t\tdocument.body.style.overflow = '';\n\t\t}\n\t\tdocument.addEventListener('keydown', e => { if (e.key === 'Escape') closeScheduleModal(); });\n\n\t\t/* --- Tab switching --- */\n\t\tlet currentTab = 'text';\n\t\tfunction switchTab(tab) {\n\t\t\tcurrentTab = tab;\n\t\t\tdocument.getElementById('modal-msg-type').value = tab;\n\t\t\t// Update tab buttons\n\t\t\tdocument.querySelectorAll('.tab-btn').forEach(btn => {\n\t\t\t\tbtn.classList.remove('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t\tbtn.classList.add('border-transparent','text-gray-400');\n\t\t\t});\n\t\t\tconst active = document.getElementById('tab-btn-' + tab);\n\t\t\tactive.classList.remove('border-transparent','text-gray-400');\n\t\t\tactive.classList.add('border-green-600','text-green-700','bg-green-50/60');\n\t\t\t// Show/hide panels\n\t\t\tdocument.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));\n\t\t\tdocument.getElementById('tab-' + tab).classList.remove('hidden');\n\t\t\t// Sync file_id from the active browser\n\t\t\tsyncFileId();\n\t\t}\n\t\tfunction syncFileId() {\n\t\t\tlet fid = '';\n\t\t\tif (currentTab === 'image') {\n\t\t\t\tfid = document.getElementById('modal-img-file-id')?.value || '';\n\t\t\t} else if (currentTab === 'image_only') {\n\t\t\t\tfid = document.getElementById('modal-only-file-id')?.value || '';\n\t\t\t}\n\t\t\tdocument.getElementById('modal-file-id').value = fid;\n\t\t}\n\n\t\t/* --- Media browser --- */\n\t\tlet _mediaData = null;\n\t\tasync function getMediaData() {\n\t\t\tif (!_mediaData) {\n\t\t\t\tconst r = await fetch('/api/media-tree');\n\t\t\t\t_mediaData = await r.json();\n\t\t\t}\n\t\t\treturn _mediaData;\n\t\t}\n\t\tfunction mimeIcon(m) {\n\t\t\tif (m.startsWith('image/')) return 'image';\n\t\t\tif (m.startsWith('video/')) return 'videocam';\n\t\t\tif (m.startsWith('audio/')) return 'audiotrack';\n\t\t\treturn 'insert_drive_file';\n\t\t}\n\t\tasync function browseFolder(folderId, prefix) {\n\t\t\tconst data = await getMediaData();\n\t\t\tconst list = document.getElementById(prefix + '-list');\n\t\t\tconst bc = document.getElementById(prefix + '-breadcrumb');\n\t\t\tlist.innerHTML = '';\n\n\t\t\t// breadcrumb\n\t\t\tlet crumbs = [{id:0, name:'Ana Klasör'}];\n\t\t\tif (folderId > 0) {\n\t\t\t\tlet cur = folderId;\n\t\t\t\tlet chain = [];\n\t\t\t\twhile (cur > 0) {\n\t\t\t\t\tconst f = (data.folders||[]).find(x => x.id === cur);\n\t\t\t\t\tif (!f) break;\n\t\t\t\t\tchain.unshift(f);\n\t\t\t\t\tcur = f.parent_id;\n\t\t\t\t}\n\t\t\t\tcrumbs = crumbs.concat(chain);\n\t\t\t}\n\t\t\tbc.innerHTML = crumbs.map((c, i) => {\n\t\t\t\tif (i === crumbs.length - 1) {\n\t\t\t\t\treturn `<span class=\"font-semibold text-green-700\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</span>`;\n\t\t\t\t}\n\t\t\t\treturn `<button type=\"button\" onclick=\"browseFolder(${c.id},'${prefix}')\" class=\"hover:text-green-700 transition-colors\">${i===0?'<span class=\"material-icons-round text-[14px]\">home</span> ':''}${c.name}</button><span class=\"material-icons-round text-[12px] text-gray-300\">chevron_right</span>`;\n\t\t\t}).join('');\n\n\t\t\t// folders\n\t\t\tconst subFolders = (data.folders||[]).filter(f => f.parent_id === folderId);\n\t\t\tsubFolders.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-left transition-colors group';\n\t\t\t\tel.innerHTML = `<span class=\"material-icons-round text-amber-500 text-[22px] group-hover:text-amber-600 transition-colors\">folder</span><span class=\"text-xs text-gray-700 font-medium\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => browseFolder(f.id, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\t// files (only images for sending)\n\t\t\tconst subFiles = (data.files||[]).filter(f => f.folder_id === folderId);\n\t\t\tsubFiles.forEach(f => {\n\t\t\t\tconst el = document.createElement('button');\n\t\t\t\tel.type = 'button';\n\t\t\t\tel.className = 'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-green-50 text-left transition-colors group';\n\t\t\t\tconst isImg = f.mime_type.startsWith('image/');\n\t\t\t\tel.innerHTML = isImg\n\t\t\t\t\t? `<img src=\"/${f.path}\" class=\"w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-gray-200\"/><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`\n\t\t\t\t\t: `<span class=\"material-icons-round text-gray-400 text-[22px]\">${mimeIcon(f.mime_type)}</span><span class=\"text-xs text-gray-700 truncate\">${f.name}</span>`;\n\t\t\t\tel.onclick = () => selectFile(f, prefix);\n\t\t\t\tlist.appendChild(el);\n\t\t\t});\n\n\t\t\tif (subFolders.length === 0 && subFiles.length === 0) {\n\t\t\t\tlist.innerHTML = '<p class=\"text-xs text-gray-300 text-center py-6\">Boş klasör</p>';\n\t\t\t}\n\t\t}\n\t\tfunction selectFile(f, prefix) {\n\t\t\tdocument.getElementById(prefix + '-file-id').value = f.id;\n\t\t\tconst sel = document.getElementById(prefix + '-selected');\n\t\t\tsel.classList.remove('hidden');\n\t\t\tconst nameEl = document.getElementById(prefix + '-selected-name');\n\t\t\tnameEl.textContent = f.name;\n\t\t\tconst thumbEl = document.getElementById(prefix + '-selected-thumb');\n\t\t\tif (f.mime_type.startsWith('image/')) {\n\t\t\t\tthumbEl.src = '/' + f.path;\n\t\t\t\tthumbEl.classList.remove('hidden');\n\t\t\t} else {\n\t\t\t\tthumbEl.classList.add('hidden');\n\t\t\t}\n\t\t\t// Sync to main hidden input\n\t\t\tsyncFileId();\n\t\t}\n\t\tlet _browsersInitialized = false;\n\t\tfunction initBrowsers() {\n\t\t\tif (_browsersInitialized) return;\n\t\t\t_browsersInitialized = true;\n\t\t\tbrowseFolder(0, 'modal-img');\n\t\t\tbrowseFolder(0, 'modal-only');\n\t\t}\n\t\t/* --- Form submit: sync message from active tab --- */\n\t\tdocument.getElementById('schedule-form').addEventListener('submit', function() {\n\t\t\tlet msg = '';\n\t\t\tif (currentTab === 'text') {\n\t\t\t\tmsg = document.getElementById('modal-message').value;\n\t\t\t} else if (currentTab === 'image') {\n\t\t\t\tmsg = document.getElementById('modal-caption').value;\n\t\t\t}\n\t\t\tdocument.getElementById('modal-message-hidden').value = msg;\n\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -339,90 +287,90 @@ func mediaBrowserBlock(prefix string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var12 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var12 == nil {
-			templ_7745c5c3_Var12 = templ.NopComponent
+		templ_7745c5c3_Var10 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var10 == nil {
+			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Arşivden Resim Seç</label> <input type=\"hidden\" id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Arşivden Resim Seç</label> <input type=\"hidden\" id=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var11 string
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-file-id")
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 448, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\" value=\"\"><div class=\"border border-gray-200 rounded-2xl overflow-hidden bg-gray-50/50\"><!-- Breadcrumb --><div id=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-breadcrumb")
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 451, Col: 35}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "\" class=\"flex items-center gap-1 px-4 py-2.5 bg-white border-b border-gray-100 text-xs text-gray-500 min-h-[36px]\"></div><!-- File list --><div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-file-id")
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-list")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 459, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 453, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "\" value=\"\"><div class=\"border border-gray-200 rounded-2xl overflow-hidden bg-gray-50/50\"><!-- Breadcrumb --><div id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" class=\"max-h-48 overflow-y-auto p-2 space-y-0.5\"><p class=\"text-xs text-gray-300 text-center py-6\">Yükleniyor...</p></div></div><!-- Selected file indicator --><div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var14 string
-		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-breadcrumb")
+		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 462, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 458, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\" class=\"flex items-center gap-1 px-4 py-2.5 bg-white border-b border-gray-100 text-xs text-gray-500 min-h-[36px]\"></div><!-- File list --><div id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\" class=\"hidden mt-2 flex items-center gap-3 px-4 py-2.5 bg-green-50 border border-green-200 rounded-xl\"><img id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-list")
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-thumb")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 464, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 459, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\" class=\"max-h-48 overflow-y-auto p-2 space-y-0.5\"><p class=\"text-xs text-gray-300 text-center py-6\">Yükleniyor...</p></div></div><!-- Selected file indicator --><div id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "\" src=\"\" class=\"w-8 h-8 rounded-lg object-cover shrink-0 hidden\"> <span class=\"material-icons-round text-green-600 text-[18px]\">check_circle</span> <span id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
-		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected")
+		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-name")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 469, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 461, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "\" class=\"hidden mt-2 flex items-center gap-3 px-4 py-2.5 bg-green-50 border border-green-200 rounded-xl\"><img id=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-thumb")
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 470, Col: 39}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" src=\"\" class=\"w-8 h-8 rounded-lg object-cover shrink-0 hidden\"> <span class=\"material-icons-round text-green-600 text-[18px]\">check_circle</span> <span id=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-name")
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 472, Col: 39}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" class=\"text-xs font-semibold text-green-700 truncate\"></span></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"text-xs font-semibold text-green-700 truncate\"></span></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -446,24 +394,24 @@ func msgTypeBadge(t string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var19 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var19 == nil {
-			templ_7745c5c3_Var19 = templ.NopComponent
+		templ_7745c5c3_Var17 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var17 == nil {
+			templ_7745c5c3_Var17 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		switch t {
 		case "image":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700\"><span class=\"material-icons-round text-[13px]\">photo_library</span>Resim+Mesaj</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700\"><span class=\"material-icons-round text-[13px]\">photo_library</span>Resim+Mesaj</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "image_only":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700\"><span class=\"material-icons-round text-[13px]\">image</span>Sadece Resim</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700\"><span class=\"material-icons-round text-[13px]\">image</span>Sadece Resim</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600\"><span class=\"material-icons-round text-[13px]\">chat</span>Mesaj</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600\"><span class=\"material-icons-round text-[13px]\">chat</span>Mesaj</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -488,12 +436,12 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var20 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var20 == nil {
-			templ_7745c5c3_Var20 = templ.NopComponent
+		templ_7745c5c3_Var18 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var18 == nil {
+			templ_7745c5c3_Var18 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<div class=\"relative group/tip inline-flex\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "<div class=\"relative group/tip inline-flex\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -501,63 +449,63 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-50\"><div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<div class=\"absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:block z-50\"><div class=\"bg-gray-800 text-white rounded-xl shadow-lg p-2 min-w-[140px] max-w-[260px]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		switch msg.MsgType {
 		case "image", "image_only":
 			if msg.FilePath != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<img src=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<img src=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs("/uploads/" + msg.FilePath)
+				var templ_7745c5c3_Var19 string
+				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs("/uploads/" + msg.FilePath)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 502, Col: 44}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 491, Col: 44}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "\" alt=\"Önizleme\" class=\"w-full max-h-40 object-contain rounded-lg\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\" alt=\"Önizleme\" class=\"w-full max-h-40 object-contain rounded-lg\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<p class=\"text-xs text-gray-300 text-center\">Dosya bulunamadı</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<p class=\"text-xs text-gray-300 text-center\">Dosya bulunamadı</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		default:
 			if msg.Message != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<p class=\"text-xs leading-relaxed break-words\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<p class=\"text-xs leading-relaxed break-words\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var22 string
-				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
+				var templ_7745c5c3_Var20 string
+				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 508, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 497, Col: 67}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<p class=\"text-xs text-gray-300 text-center italic\">Boş mesaj</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "<p class=\"text-xs text-gray-300 text-center italic\">Boş mesaj</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mt-1\"></div></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45 -mt-1\"></div></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -581,29 +529,29 @@ func repeatBadge(r string) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var23 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var23 == nil {
-			templ_7745c5c3_Var23 = templ.NopComponent
+		templ_7745c5c3_Var21 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var21 == nil {
+			templ_7745c5c3_Var21 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		switch r {
 		case "daily":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Gün</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Gün</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "weekly":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Hafta</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Hafta</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "monthly":
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Ay</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<span class=\"inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700\"><span class=\"material-icons-round text-[13px]\">repeat</span>Her Ay</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		default:
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<span class=\"text-xs text-gray-300\">—</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "<span class=\"text-xs text-gray-300\">—</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

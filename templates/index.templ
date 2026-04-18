@@ -223,19 +223,8 @@ templ Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGr
 							<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Hedef Grup / Kişi</label>
 							<select name="phone" id="modal-phone" required class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all">
 								<option value="" disabled selected>Seçiniz...</option>
-								if len(waGroups) > 0 {
-									<optgroup label="WhatsApp Grupları">
-										for _, g := range waGroups {
-											<option value={ g.JID }>{ g.Name }</option>
-										}
-									</optgroup>
-								}
-								if len(contactGroups) > 0 {
-									<optgroup label="Kişi Grupları">
-										for _, cg := range contactGroups {
-											<option value={ fmt.Sprintf("cg:%d", cg.ID) }>{ cg.Name }</option>
-										}
-									</optgroup>
+								for _, cg := range contactGroups {
+									<option value={ fmt.Sprintf("cg:%d", cg.ID) }>{ cg.Name }</option>
 								}
 							</select>
 						</div>
