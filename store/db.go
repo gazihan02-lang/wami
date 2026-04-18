@@ -193,6 +193,7 @@ func (d *DB) GetAllScheduled() ([]ScheduledMessage, error) {
 		        COALESCE(mf.path,''), COALESCE(mf.mime_type,'')
 		 FROM scheduled_messages sm
 		 LEFT JOIN media_files mf ON mf.id = sm.file_id
+		 WHERE sm.sent = 0
 		 ORDER BY sm.scheduled_at DESC LIMIT 100`,
 	)
 	if err != nil {
