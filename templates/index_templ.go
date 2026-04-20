@@ -54,7 +54,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 				return templ_7745c5c3_Err
 			}
 			if connected {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\"><div class=\"relative flex h-3 w-3\"><span class=\"animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75\"></span> <span class=\"relative inline-flex rounded-full h-3 w-3 bg-green-500\"></span></div><div><p class=\"text-base font-semibold text-green-700\">Bağlı</p><p class=\"text-xs text-gray-400 mt-0.5\">WhatsApp oturumu aktif</p></div></div><div class=\"flex items-center gap-2\"><form method=\"POST\" action=\"/reset\" onsubmit=\"return confirm('Tüm veriler (mesajlar, gruplar, şablonlar, dosyalar) silinecek. Emin misiniz?')\"><button type=\"submit\" class=\"md-focus flex items-center gap-1.5 text-sm text-orange-600 border border-orange-200 bg-orange-50 hover:bg-orange-100 px-4 py-2 rounded-xl font-medium transition-colors\"><span class=\"material-icons-round text-[16px]\">restart_alt</span> Sıfırla</button></form><form method=\"POST\" action=\"/logout\" onsubmit=\"return confirm('Çıkış yapmak istediğinize emin misiniz?')\"><button type=\"submit\" class=\"md-focus flex items-center gap-1.5 text-sm text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl font-medium transition-colors\"><span class=\"material-icons-round text-[16px]\">logout</span> Çıkış</button></form></div></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex items-center justify-between\"><div class=\"flex items-center gap-3\"><div class=\"relative flex h-3 w-3\"><span class=\"animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75\"></span> <span class=\"relative inline-flex rounded-full h-3 w-3 bg-green-500\"></span></div><div><p class=\"text-base font-semibold text-green-700\">Bağlı</p></div></div><div class=\"flex items-center gap-2\"><form method=\"POST\" action=\"/reset\" onsubmit=\"return confirm('Tüm veriler (mesajlar, gruplar, şablonlar, dosyalar) silinecek. Emin misiniz?')\"><button type=\"submit\" class=\"md-focus flex items-center gap-1.5 text-sm text-orange-600 border border-orange-200 bg-orange-50 hover:bg-orange-100 px-4 py-2 rounded-xl font-medium transition-colors\"><span class=\"material-icons-round text-[16px]\">restart_alt</span> Sıfırla</button></form><form method=\"POST\" action=\"/logout\" onsubmit=\"return confirm('Çıkış yapmak istediğinize emin misiniz?')\"><button type=\"submit\" class=\"md-focus flex items-center gap-1.5 text-sm text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-xl font-medium transition-colors\"><span class=\"material-icons-round text-[16px]\">logout</span> Çıkış</button></form></div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -76,7 +76,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(formatCount(len(scheduled)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 97, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 96, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -104,7 +104,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					var templ_7745c5c3_Var4 string
 					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(msg.ScheduledAt.Format("02.01.2006 · 15:04"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 140, Col: 121}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 139, Col: 121}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
@@ -117,7 +117,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(resolveTarget(msg.Phone, contactGroups))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 144, Col: 53}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 143, Col: 53}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 151, Col: 59}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 150, Col: 59}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
@@ -152,7 +152,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 						var templ_7745c5c3_Var7 string
 						templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 153, Col: 26}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 152, Col: 26}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 						if templ_7745c5c3_Err != nil {
@@ -199,7 +199,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 						var templ_7745c5c3_Var8 string
 						templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", msg.ID))
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 176, Col: 77}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 175, Col: 77}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 						if templ_7745c5c3_Err != nil {
@@ -232,7 +232,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("cg:%d", cg.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 236, Col: 52}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 235, Col: 52}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -245,7 +245,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(cg.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 236, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 235, Col: 64}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -273,7 +273,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					var templ_7745c5c3_Var11 string
 					templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(tpl.Content)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 247, Col: 37}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 246, Col: 37}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 					if templ_7745c5c3_Err != nil {
@@ -286,7 +286,7 @@ func Index(connected bool, hasQR bool, scheduled []store.ScheduledMessage, waGro
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(tpl.Name)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 247, Col: 50}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 246, Col: 50}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -360,7 +360,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-file-id")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 524, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 523, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -373,7 +373,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-breadcrumb")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 527, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 526, Col: 35}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -386,7 +386,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-list")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 529, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 528, Col: 29}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -399,7 +399,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 534, Col: 32}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 533, Col: 32}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -412,7 +412,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-thumb")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 535, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 534, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -425,7 +425,7 @@ func mediaBrowserBlock(prefix string) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(prefix + "-selected-name")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 537, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 536, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -514,7 +514,7 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 			var templ_7745c5c3_Var22 string
 			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs("/" + msg.FilePath)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 562, Col: 36}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 561, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 			if templ_7745c5c3_Err != nil {
@@ -532,7 +532,7 @@ func msgTypeTooltip(msg store.ScheduledMessage) templ.Component {
 			var templ_7745c5c3_Var23 string
 			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(msg.Message)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 564, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/index.templ`, Line: 563, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 			if templ_7745c5c3_Err != nil {
