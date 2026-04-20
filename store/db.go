@@ -69,6 +69,7 @@ type MediaFile struct {
 type SupportTicket struct {
 	ID        int64
 	Name      string
+	Category  string // "Ürün Arıza", "İstek Öneri", "Genel Konu"
 	Message   string
 	Status    string // "open", "closed"
 	Reply     string
@@ -137,6 +138,7 @@ func (d *DB) migrate() error {
 		CREATE TABLE IF NOT EXISTS support_tickets (
 			id         INTEGER  PRIMARY KEY AUTOINCREMENT,
 			name       TEXT     NOT NULL,
+			category   TEXT     NOT NULL DEFAULT 'Genel Konu',
 			message    TEXT     NOT NULL,
 			status     TEXT     NOT NULL DEFAULT 'open',
 			reply      TEXT     NOT NULL DEFAULT '',
@@ -153,6 +155,7 @@ func (d *DB) migrateScheduledColumns() {
 	d.db.Exec(`ALTER TABLE scheduled_messages ADD COLUMN msg_type TEXT NOT NULL DEFAULT 'text'`)
 	d.db.Exec(`ALTER TABLE scheduled_messages ADD COLUMN file_id INTEGER NOT NULL DEFAULT 0`)
 	d.db.Exec(`ALTER TABLE scheduled_messages ADD COLUMN repeat_rule TEXT NOT NULL DEFAULT ''`)
+	d.db.Exec(`ALTER TABLE support_tickets ADD COLUMN category TEXT NOT NULL DEFAULT 'Genel Konu'`)
 }
 
 func (d *DB) CreateScheduledMessage(phone, message string, scheduledAt time.Time, msgType string, fileID int64, repeatRule string) error {
@@ -571,10 +574,10 @@ func (d *DB) ResetAll() error {
 
 // ── Support Tickets ──
 
-func (d *DB) CreateSupportTicket(name, message string) (int64, error) {
+func (d *DB) CreateSupportTicket(name, category, message string) (int64, error) {
 	res, err := d.db.Exec(
-		`INSERT INTO support_tickets (name, message) VALUES (?, ?)`,
-		name, message,
+		`INSERT INTO support_tickets (name, category, message) VALUES (?, ?, ?)`,
+		name, category, message,
 	)
 	if err != nil {
 		return 0, err
@@ -584,7 +587,7 @@ func (d *DB) CreateSupportTicket(name, message string) (int64, error) {
 
 func (d *DB) GetSupportTickets() ([]SupportTicket, error) {
 	rows, err := d.db.Query(
-		`SELECT id, name, message, status, reply, created_at FROM support_tickets ORDER BY created_at DESC`,
+		`SELECT id, name, category, message, status, reply, created_at FROM support_tickets ORDER BY created_at DESC`,
 	)
 	if err != nil {
 		return nil, err
@@ -593,7 +596,7 @@ func (d *DB) GetSupportTickets() ([]SupportTicket, error) {
 	var list []SupportTicket
 	for rows.Next() {
 		var t SupportTicket
-		rows.Scan(&t.ID, &t.Name, &t.Message, &t.Status, &t.Reply, &t.CreatedAt)
+		rows.Scan(&t.ID, &t.Name, &t.Category, &t.Message, &t.Status, &t.Reply, &t.CreatedAt)
 		list = append(list, t)
 	}
 	return list, rows.Err()

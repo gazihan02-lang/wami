@@ -546,12 +546,16 @@ func (s *Server) handleTicketCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	name := strings.TrimSpace(r.FormValue("name"))
+	category := r.FormValue("category")
+	if category == "" {
+		category = "Genel Konu"
+	}
 	message := strings.TrimSpace(r.FormValue("message"))
 	if name == "" || message == "" {
 		http.Error(w, "İsim ve mesaj zorunludur", http.StatusBadRequest)
 		return
 	}
-	if _, err := s.db.CreateSupportTicket(name, message); err != nil {
+	if _, err := s.db.CreateSupportTicket(name, category, message); err != nil {
 		log.Printf("handleTicketCreate: %v", err)
 		http.Error(w, "Kayıt başarısız", http.StatusInternalServerError)
 		return

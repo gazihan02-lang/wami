@@ -54,6 +54,13 @@ templ Destek(tickets []store.SupportTicket) {
 										<div class="min-w-0 flex-1">
 											<div class="flex items-center gap-2 flex-wrap">
 												<span class="text-sm font-semibold text-gray-800">{ t.Name }</span>
+												if t.Category == "Ürün Arıza" {
+													<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">Ürün Arıza</span>
+												} else if t.Category == "İstek Öneri" {
+													<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">İstek Öneri</span>
+												} else {
+													<span class="text-[10px] font-bold text-gray-500 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">Genel Konu</span>
+												}
 												if t.Status == "open" {
 													<span class="text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">Bekliyor</span>
 												} else {
@@ -123,6 +130,18 @@ templ Destek(tickets []store.SupportTicket) {
 									placeholder="Adınız..."
 									class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all"
 								/>
+							</div>
+							<div>
+								<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Kategori</label>
+								<select
+									name="category"
+									required
+									class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all appearance-none"
+								>
+									<option value="Ürün Arıza">Ürün Arıza</option>
+									<option value="İstek Öneri">İstek Öneri</option>
+									<option value="Genel Konu" selected>	Genel Konu</option>
+								</select>
 							</div>
 							<div>
 								<label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Mesaj</label>
