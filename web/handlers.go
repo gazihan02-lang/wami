@@ -381,6 +381,29 @@ func (s *Server) handleGroupCreate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/schedule", http.StatusSeeOther)
 }
 
+func (s *Server) handleGroupRename(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	if err != nil {
+		http.Error(w, "Geçersiz ID", http.StatusBadRequest)
+		return
+	}
+	name := strings.TrimSpace(r.FormValue("name"))
+	if name == "" {
+		http.Error(w, "İsim zorunlu", http.StatusBadRequest)
+		return
+	}
+	if err := s.db.RenameContactGroup(id, name); err != nil {
+		log.Printf("handleGroupRename: %v", err)
+		http.Error(w, "Güncellenemedi", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/schedule", http.StatusSeeOther)
+}
+
 func (s *Server) handleGroupDelete(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)

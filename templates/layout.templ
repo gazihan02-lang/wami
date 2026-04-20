@@ -40,8 +40,12 @@ templ Layout(title string) {
 						</div>
 						<span class="text-[17px] font-semibold tracking-tight leading-none">wami</span>
 					</a>
-					<!-- Navigation tabs -->
-					<nav class="flex items-center gap-0.5">
+					<!-- Hamburger button (mobile) -->
+					<button id="menu-toggle" type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden p-2 rounded-xl hover:bg-white/15 transition-colors">
+						<span class="material-icons-round text-[24px]">menu</span>
+					</button>
+					<!-- Desktop nav -->
+					<nav class="hidden md:flex items-center gap-0.5">
 						<a href="/" class="md-focus flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 hover:text-white transition-all duration-150">
 							<span class="material-icons-round text-[18px]">home</span>
 							<span>Anasayfa</span>
@@ -67,6 +71,33 @@ templ Layout(title string) {
 					</nav>
 				</div>
 			</header>
+			<!-- Mobile menu -->
+			<div id="mobile-menu" class="hidden md:hidden bg-green-700 border-t border-white/10" style="box-shadow: 0 4px 12px rgba(0,0,0,.15);">
+				<nav class="flex flex-col px-4 py-3 gap-1">
+					<a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 transition-all">
+						<span class="material-icons-round text-[20px]">home</span>
+						<span>Anasayfa</span>
+					</a>
+					<a href="/schedule" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 transition-all">
+						<span class="material-icons-round text-[20px]">group_work</span>
+						<span>WhatsApp Ayarları</span>
+					</a>
+					<a href="/history" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 transition-all">
+						<span class="material-icons-round text-[20px]">inventory_2</span>
+						<span>Arşiv</span>
+					</a>
+					<a href="/destek" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/90 hover:bg-white/15 transition-all">
+						<span class="material-icons-round text-[20px]">help</span>
+						<span>Destek</span>
+					</a>
+					<form method="POST" action="/auth/logout">
+						<button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:bg-white/15 hover:text-white transition-all">
+							<span class="material-icons-round text-[20px]">power_settings_new</span>
+							<span>Çıkış</span>
+						</button>
+					</form>
+				</nav>
+			</div>
 			<main class="max-w-6xl mx-auto px-6 py-8">
 				{ children... }
 			</main>

@@ -293,6 +293,11 @@ func (d *DB) GetContactGroupJIDs(id int64) ([]string, error) {
 	return strings.Split(jidsStr, ","), nil
 }
 
+func (d *DB) RenameContactGroup(id int64, name string) error {
+	_, err := d.db.Exec(`UPDATE contact_groups SET name = ? WHERE id = ?`, name, id)
+	return err
+}
+
 func (d *DB) DeleteContactGroup(id int64) error {
 	_, err := d.db.Exec(`DELETE FROM contact_groups WHERE id = ?`, id)
 	return err

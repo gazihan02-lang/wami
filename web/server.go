@@ -39,6 +39,7 @@ func (s *Server) routes() {
 	s.mux.HandleFunc("POST /schedule", s.handleScheduleSubmit)
 	s.mux.HandleFunc("POST /schedule/delete", s.handleScheduleDelete)
 	s.mux.HandleFunc("POST /groups/create", s.handleGroupCreate)
+	s.mux.HandleFunc("POST /groups/rename", s.handleGroupRename)
 	s.mux.HandleFunc("POST /groups/delete", s.handleGroupDelete)
 	s.mux.HandleFunc("POST /msgtpl/create", s.handleMsgTplCreate)
 	s.mux.HandleFunc("POST /msgtpl/delete", s.handleMsgTplDelete)

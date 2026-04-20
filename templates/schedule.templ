@@ -123,16 +123,32 @@ templ ScheduleForm(waGroups []wa.Group, contactGroups []store.ContactGroup, msgT
 												<p class="text-[11px] text-gray-400">{ fmt.Sprintf("%d WhatsApp grubu", len(cg.JIDs)) }</p>
 											</div>
 										</div>
-										<form method="POST" action="/groups/delete" class="shrink-0">
-											<input type="hidden" name="id" value={ fmt.Sprintf("%d", cg.ID) }/>
-											<button
-												type="submit"
-												onclick="return confirm('Bu grubu silmek istediğinize emin misiniz?')"
-												class="md-focus p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
-											>
-												<span class="material-icons-round text-[18px]">delete_outline</span>
-											</button>
-										</form>
+										<div class="flex items-center gap-1 shrink-0">
+											<!-- Rename -->
+											<form method="POST" action="/groups/rename">
+												<input type="hidden" name="id" value={ fmt.Sprintf("%d", cg.ID) }/>
+												<input type="hidden" name="name" class="rename-val"/>
+												<button
+													type="submit"
+													data-oldname={ cg.Name }
+													onclick="var n=prompt('Yeni grup adı:',this.dataset.oldname); if(!n||!n.trim()){event.preventDefault();return;} this.form.querySelector('.rename-val').value=n.trim();"
+													class="md-focus p-2 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-xl transition-all"
+												>
+													<span class="material-icons-round text-[18px]">edit</span>
+												</button>
+											</form>
+											<!-- Delete -->
+											<form method="POST" action="/groups/delete">
+												<input type="hidden" name="id" value={ fmt.Sprintf("%d", cg.ID) }/>
+												<button
+													type="submit"
+													onclick="return confirm('Bu grubu silmek istediğinize emin misiniz?')"
+													class="md-focus p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+												>
+													<span class="material-icons-round text-[18px]">delete_outline</span>
+												</button>
+											</form>
+										</div>
 									</div>
 								}
 							</div>
