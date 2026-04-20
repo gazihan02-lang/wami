@@ -66,6 +66,15 @@ type MediaFile struct {
 	CreatedAt time.Time
 }
 
+type SupportTicket struct {
+	ID        int64
+	Name      string
+	Message   string
+	Status    string // "open", "closed"
+	Reply     string
+	CreatedAt time.Time
+}
+
 func New(path string) (*DB, error) {
 	db, err := sql.Open("sqlite", path)
 	if err != nil {
@@ -123,6 +132,14 @@ func (d *DB) migrate() error {
 			path       TEXT     NOT NULL,
 			mime_type  TEXT     NOT NULL,
 			size       INTEGER  NOT NULL DEFAULT 0,
+			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+		);
+		CREATE TABLE IF NOT EXISTS support_tickets (
+			id         INTEGER  PRIMARY KEY AUTOINCREMENT,
+			name       TEXT     NOT NULL,
+			message    TEXT     NOT NULL,
+			status     TEXT     NOT NULL DEFAULT 'open',
+			reply      TEXT     NOT NULL DEFAULT '',
 			created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 		);
 	`)
@@ -547,6 +564,47 @@ func (d *DB) ResetAll() error {
 		DELETE FROM message_templates;
 		DELETE FROM media_folders;
 		DELETE FROM media_files;
+		DELETE FROM support_tickets;
 	`)
+	return err
+}
+
+// ── Support Tickets ──
+
+func (d *DB) CreateSupportTicket(name, message string) (int64, error) {
+	res, err := d.db.Exec(
+		`INSERT INTO support_tickets (name, message) VALUES (?, ?)`,
+		name, message,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return res.LastInsertId()
+}
+
+func (d *DB) GetSupportTickets() ([]SupportTicket, error) {
+	rows, err := d.db.Query(
+		`SELECT id, name, message, status, reply, created_at FROM support_tickets ORDER BY created_at DESC`,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var list []SupportTicket
+	for rows.Next() {
+		var t SupportTicket
+		rows.Scan(&t.ID, &t.Name, &t.Message, &t.Status, &t.Reply, &t.CreatedAt)
+		list = append(list, t)
+	}
+	return list, rows.Err()
+}
+
+func (d *DB) ReplySupportTicket(id int64, reply string) error {
+	_, err := d.db.Exec(`UPDATE support_tickets SET reply = ?, status = 'closed' WHERE id = ?`, reply, id)
+	return err
+}
+
+func (d *DB) DeleteSupportTicket(id int64) error {
+	_, err := d.db.Exec(`DELETE FROM support_tickets WHERE id = ?`, id)
 	return err
 }

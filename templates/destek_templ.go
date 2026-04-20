@@ -8,7 +8,12 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Destek() templ.Component {
+import (
+	"fmt"
+	"wami/store"
+)
+
+func Destek(tickets []store.SupportTicket) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -41,7 +46,156 @@ func Destek() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"max-w-2xl space-y-5\"><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1\"><span class=\"material-icons-round text-white text-[20px]\">help</span></div><div><h2 class=\"text-xl font-bold text-gray-800 leading-tight\">Destek</h2><p class=\"text-xs text-gray-400\">Kullanım kılavuzu ve sık sorulan sorular</p></div></div><div class=\"bg-white rounded-3xl md-elevation-1 divide-y divide-gray-100 overflow-hidden\"><!-- S1 --><div class=\"p-6 space-y-2\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"w-7 h-7 rounded-xl bg-green-100 flex items-center justify-center shrink-0\"><span class=\"material-icons-round text-green-700 text-[15px]\">smart_toy</span></span><h3 class=\"font-semibold text-gray-800 text-sm\">Bot Nasıl Çalışır?</h3></div><p class=\"text-sm text-gray-500 leading-relaxed\">Wami, WhatsApp hesabınıza QR kodu ile bağlanır ve belirlediğiniz zamanda otomatik mesaj gönderir. Mesajlar SQLite veritabanında saklanır; zamanlama motoru her 30 saniyede bir kontrol eder.</p></div><!-- S2 --><div class=\"p-6 space-y-2\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"w-7 h-7 rounded-xl bg-green-100 flex items-center justify-center shrink-0\"><span class=\"material-icons-round text-green-700 text-[15px]\">schedule_send</span></span><h3 class=\"font-semibold text-gray-800 text-sm\">Mesaj Planlamak İçin</h3></div><ol class=\"text-sm text-gray-500 space-y-1.5 list-none\"><li class=\"flex items-start gap-2\"><span class=\"w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5\">1</span> Üstteki <strong>Mesaj</strong> menüsüne tıkla.</li><li class=\"flex items-start gap-2\"><span class=\"w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5\">2</span> <strong>Yeni Grup Oluştur</strong> bölümünden WhatsApp gruplarını seç ve isim ver.</li><li class=\"flex items-start gap-2\"><span class=\"w-5 h-5 rounded-full bg-green-100 text-green-700 text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5\">3</span> Mesajını yaz, tarih &amp; saati seç, <strong>Planla</strong> butonuna bas.</li></ol></div><!-- S3 --><div class=\"p-6 space-y-2\"><div class=\"flex items-center gap-2 mb-2\"><span class=\"w-7 h-7 rounded-xl bg-amber-100 flex items-center justify-center shrink-0\"><span class=\"material-icons-round text-amber-600 text-[15px]\">qr_code_scanner</span></span><h3 class=\"font-semibold text-gray-800 text-sm\">QR Süresi Doldu / Bağlantı Kesildi?</h3></div><p class=\"text-sm text-gray-500 leading-relaxed\">Botu yeniden başlat. Giriş yapmışsan <code class=\"bg-gray-100 px-1.5 py-0.5 rounded-lg text-xs font-mono\">wa.db</code> dosyası oturumu hatırlar. Sıfırdan bağlanmak için <code class=\"bg-gray-100 px-1.5 py-0.5 rounded-lg text-xs font-mono\">wa.db</code> dosyasını sil.</p></div><!-- Footer --><div class=\"px-6 py-4 bg-gray-50/60 flex items-center justify-between\"><span class=\"text-xs text-gray-400\">wami v1.0 · whatsmeow · Go + Templ</span> <span class=\"material-icons-round text-gray-300 text-[18px]\">info</span></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"space-y-6\"><!-- Header --><div class=\"flex items-center justify-between flex-wrap gap-4\"><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-2xl bg-green-700 flex items-center justify-center md-elevation-1\"><span class=\"material-icons-round text-white text-[20px]\">support_agent</span></div><div><h2 class=\"text-xl font-bold text-gray-800 leading-tight\">Destek Talepleri</h2><p class=\"text-xs text-gray-400\">İstek ve sorunlarınızı buradan iletebilirsiniz</p></div></div><button type=\"button\" onclick=\"document.getElementById('ticket-modal').classList.remove('hidden')\" class=\"flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors md-elevation-1\"><span class=\"material-icons-round text-[16px]\">add</span> Yeni Talep</button></div><!-- Tickets list --><div class=\"bg-white rounded-3xl md-elevation-1 overflow-hidden\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if len(tickets) == 0 {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex flex-col items-center justify-center py-16 text-gray-300 gap-3\"><span class=\"material-icons-round text-[56px]\">inbox</span><p class=\"text-sm text-gray-400\">Henüz destek talebi yok</p><p class=\"text-xs text-gray-300\">Yukarıdaki \"Yeni Talep\" butonuyla talep oluşturun</p></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			} else {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"divide-y divide-gray-100\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for _, t := range tickets {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"p-5 hover:bg-gray-50/50 transition-colors\"><div class=\"flex items-start justify-between gap-4\"><div class=\"flex items-start gap-3 min-w-0 flex-1\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if t.Status == "open" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 mt-0.5\"><span class=\"material-icons-round text-amber-600 text-[18px]\">schedule</span></div>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					} else {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0 mt-0.5\"><span class=\"material-icons-round text-green-700 text-[18px]\">check_circle</span></div>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"min-w-0 flex-1\"><div class=\"flex items-center gap-2 flex-wrap\"><span class=\"text-sm font-semibold text-gray-800\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var3 string
+					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(t.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 56, Col: 70}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</span> ")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if t.Status == "open" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<span class=\"text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full\">Bekliyor</span> ")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					} else {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span class=\"text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full\">Yanıtlandı</span> ")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"text-[10px] text-gray-300\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(t.CreatedAt.Format("02.01.2006 15:04"))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 62, Col: 92}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></div><p class=\"text-sm text-gray-600 mt-1.5 whitespace-pre-wrap break-words\">")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var5 string
+					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(t.Message)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 64, Col: 94}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</p>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					if t.Reply != "" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"mt-3 bg-green-50/60 border border-green-100 rounded-2xl p-3\"><div class=\"flex items-center gap-1.5 mb-1\"><span class=\"material-icons-round text-green-700 text-[14px]\">reply</span> <span class=\"text-[10px] font-bold text-green-700 uppercase tracking-wider\">Yanıt</span></div><p class=\"text-sm text-gray-700 whitespace-pre-wrap break-words\">")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var6 string
+						templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(t.Reply)
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 71, Col: 87}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</p></div>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					if t.Status == "open" {
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<form method=\"POST\" action=\"/destek/reply\" class=\"mt-3 flex gap-2\"><input type=\"hidden\" name=\"id\" value=\"")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						var templ_7745c5c3_Var7 string
+						templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", t.ID))
+						if templ_7745c5c3_Err != nil {
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 76, Col: 75}
+						}
+						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+						templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"> <input type=\"text\" name=\"reply\" placeholder=\"Yanıt yaz...\" required class=\"flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50\"> <button type=\"submit\" class=\"px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-xl transition-colors flex items-center gap-1\"><span class=\"material-icons-round text-[14px]\">send</span> Yanıtla</button></form>")
+						if templ_7745c5c3_Err != nil {
+							return templ_7745c5c3_Err
+						}
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><form method=\"POST\" action=\"/destek/delete\" class=\"shrink-0\"><input type=\"hidden\" name=\"id\" value=\"")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var8 string
+					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", t.ID))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/destek.templ`, Line: 93, Col: 72}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\"> <button type=\"submit\" onclick=\"return confirm('Bu talebi silmek istediğinize emin misiniz?')\" class=\"p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all\"><span class=\"material-icons-round text-[16px]\">delete_outline</span></button></form></div></div>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div><!-- New ticket modal --><div id=\"ticket-modal\" class=\"hidden fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm\" onclick=\"if(event.target===this)this.classList.add('hidden')\"><div class=\"bg-white rounded-3xl md-elevation-3 w-full max-w-md mx-4 animate-modal-in\"><div class=\"px-6 pt-6 pb-4\"><h3 class=\"text-lg font-bold text-gray-800\">Yeni Destek Talebi</h3><p class=\"text-xs text-gray-400 mt-1\">İsteğinizi veya sorununuzu aşağıya yazın</p></div><form method=\"POST\" action=\"/destek/create\"><div class=\"px-6 space-y-4\"><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">İsim</label> <input type=\"text\" name=\"name\" required placeholder=\"Adınız...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-gray-50/50 transition-all\"></div><div><label class=\"text-[11px] font-semibold text-gray-400 uppercase tracking-wider block mb-2\">Mesaj</label> <textarea name=\"message\" required rows=\"4\" placeholder=\"İsteğinizi veya sorununuzu açıklayın...\" class=\"w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none bg-gray-50/50 transition-all\"></textarea></div></div><div class=\"px-6 py-4 mt-2 flex justify-end gap-3\"><button type=\"button\" onclick=\"document.getElementById('ticket-modal').classList.add('hidden')\" class=\"px-5 py-2.5 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors\">İptal</button> <button type=\"submit\" class=\"px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 md-elevation-1\"><span class=\"material-icons-round text-[16px]\">send</span> Gönder</button></div></form></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

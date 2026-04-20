@@ -536,7 +536,66 @@ func (s *Server) handleMediaTree(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleDestek(w http.ResponseWriter, r *http.Request) {
-	templates.Destek().Render(r.Context(), w)
+	tickets, _ := s.db.GetSupportTickets()
+	templates.Destek(tickets).Render(r.Context(), w)
+}
+
+func (s *Server) handleTicketCreate(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	name := strings.TrimSpace(r.FormValue("name"))
+	message := strings.TrimSpace(r.FormValue("message"))
+	if name == "" || message == "" {
+		http.Error(w, "İsim ve mesaj zorunludur", http.StatusBadRequest)
+		return
+	}
+	if _, err := s.db.CreateSupportTicket(name, message); err != nil {
+		log.Printf("handleTicketCreate: %v", err)
+		http.Error(w, "Kayıt başarısız", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/destek", http.StatusSeeOther)
+}
+
+func (s *Server) handleTicketReply(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	if err != nil {
+		http.Error(w, "Geçersiz ID", http.StatusBadRequest)
+		return
+	}
+	reply := strings.TrimSpace(r.FormValue("reply"))
+	if reply == "" {
+		http.Error(w, "Yanıt zorunlu", http.StatusBadRequest)
+		return
+	}
+	if err := s.db.ReplySupportTicket(id, reply); err != nil {
+		log.Printf("handleTicketReply: %v", err)
+		http.Error(w, "Yanıt kaydedilemedi", http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/destek", http.StatusSeeOther)
+}
+
+func (s *Server) handleTicketDelete(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	id, err := strconv.ParseInt(r.FormValue("id"), 10, 64)
+	if err != nil {
+		http.Error(w, "Geçersiz ID", http.StatusBadRequest)
+		return
+	}
+	if err := s.db.DeleteSupportTicket(id); err != nil {
+		log.Printf("handleTicketDelete: %v", err)
+	}
+	http.Redirect(w, r, "/destek", http.StatusSeeOther)
 }
 
 func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
